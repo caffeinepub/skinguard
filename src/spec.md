@@ -1,19 +1,17 @@
 # Specification
 
 ## Summary
-**Goal:** Apply a comprehensive professional design upgrade to the entire SkinCare Analyzer application, elevating the visual identity to match healthcare/skincare industry standards.
+**Goal:** Populate all database tables with a minimum of 50 valid records each to enable comprehensive data validation and testing.
 
 **Planned changes:**
-- Upgrade typography system with professional font stack (Inter/System UI), improved weights, line heights, and consistent hierarchy across all pages
-- Refine color palette with sophisticated healthcare-inspired tones, deeper accents, professional neutrals, and ensure WCAG accessibility compliance
-- Enhance all card components (ProductCard, IngredientCard, ArticleCard) with refined shadows, borders, spacing, and consistent elevation effects
-- Improve button design with professional styling, clear variants (primary, secondary, tertiary), smooth transitions, and polished loading states
-- Upgrade form inputs, textareas, and search fields with refined borders, focus states, validation feedback, and consistent styling
-- Polish header navigation with refined spacing, smooth hover effects, active link indicators, and professional mobile responsiveness
-- Refine LandingPage hero section with improved typography, enhanced ProductSearchBar, prominent CTAs, and professional feature cards
-- Enhance Dashboard with professional statistics cards, polished progress indicators, and cohesive data visualization
-- Upgrade DBMSDocumentationPage with academic report design, improved code syntax highlighting, and refined diagram presentation
-- Improve spacing, margins, and padding consistency across all pages with professional whitespace management
-- Add professional loading states, skeleton screens, and subtle transitions throughout the application
+- Expand ingredient database to 50+ records with complete safety classifications, descriptions, and skin type suitability
+- Add 50+ product records covering all major categories (cleansers, serums, moisturizers, sunscreens, treatments, toners, masks, exfoliants)
+- Generate 50+ test user records with diverse skin types and concern combinations
+- Create 50+ skin type analysis results linked to seed users
+- Populate favorites table with 50+ records distributed across users
+- Generate 50+ skincare routine records with multiple steps per routine
+- Add 50+ product note records with ratings and usage experiences
+- Create 50+ analysis history records spanning multiple months to show temporal progression
+- Implement admin initialization function to populate all tables with seed data while maintaining referential integrity
 
-**User-visible outcome:** The entire application displays a polished, professional appearance suitable for a healthcare/skincare platform, with refined typography, sophisticated colors, enhanced components, and smooth interactions, while maintaining all existing functionality.
+**User-visible outcome:** The application will have a fully populated database with realistic test data, allowing comprehensive testing of all features including product recommendations, favorites, routines, notes, and progress tracking without requiring manual data entry.

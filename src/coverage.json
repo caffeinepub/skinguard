@@ -1,205 +1,90 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T10:33:45.680Z",
+  "generatedAt": "2026-02-22T10:44:55.523Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 11,
-    "implemented": 10,
+    "total": 9,
+    "implemented": 0,
     "items": [
       {
-        "id": "REQ-80",
-        "summary": "Redesign the entire application with a professional, polished visual identity suitable for a healthcare/skincare platform. Upgrade typography to use a professional font stack (e.g., Inter, System UI, or similar modern sans-serif), increase font weights for headings, improve line heights and letter spacing for readability, and ensure consistent hierarchy across all pages.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-81",
-        "summary": "Enhance the color palette to create a more sophisticated and professional appearance. Refine the healthcare-inspired soft greens and whites to include deeper accent tones, professional neutrals (grays), and ensure sufficient contrast ratios for accessibility. Apply consistent color usage for interactive elements (buttons, links, badges) across all components.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-82",
-        "summary": "Upgrade card components throughout the application with refined shadows, borders, and spacing. Apply subtle elevation effects, rounded corners, and appropriate padding to create a clean, professional card-based layout. Ensure consistent styling across ProductCard, IngredientCard, ArticleCard, and all other card components.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ProductCard.tsx",
-          "frontend/src/components/IngredientCard.tsx",
-          "frontend/src/components/ArticleCard.tsx",
-          "frontend/src/components/AnalysisHistory.tsx",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ProductCard.tsx",
-          "frontend/src/components/IngredientCard.tsx",
-          "frontend/src/components/ArticleCard.tsx",
-          "frontend/src/components/AnalysisHistory.tsx",
-          "frontend/tailwind.config.js"
-        ]
-      },
-      {
-        "id": "REQ-83",
-        "summary": "Improve button design across the application with professional styling including refined padding, font weights, hover effects, and loading states. Ensure primary, secondary, and tertiary button variants are clearly differentiated. Add smooth transitions and professional micro-interactions to all interactive elements.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/LoginButton.tsx",
-          "frontend/src/components/PDFExportButton.tsx",
-          "frontend/src/components/ExportButton.tsx",
-          "frontend/src/index.css"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/LoginButton.tsx",
-          "frontend/src/index.css"
-        ]
-      },
-      {
-        "id": "REQ-84",
-        "summary": "Enhance form inputs, textareas, and search fields with professional styling including refined borders, focus states, placeholder text styling, and validation feedback. Apply consistent input height, padding, and error message styling across all form components including Questionnaire, IngredientAnalysis, ProductSuitabilityChecker, and search bars.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/Questionnaire.tsx",
-          "frontend/src/components/IngredientAnalysis.tsx",
-          "frontend/src/components/ProductSearchBar.tsx",
-          "frontend/src/components/ProductNoteModal.tsx",
-          "frontend/src/components/ProfileSetupModal.tsx",
-          "frontend/src/pages/RoutineBuilderPage.tsx",
-          "frontend/src/index.css"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/Questionnaire.tsx",
-          "frontend/src/index.css"
-        ]
-      },
-      {
-        "id": "REQ-85",
-        "summary": "Upgrade the Layout header navigation with a more professional appearance including refined spacing, hover effects, active link indicators, and mobile-responsive behavior. Ensure the logo area, navigation links, and LoginButton are visually balanced and professional.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-86",
-        "summary": "Refine the LandingPage hero section with a more professional and engaging layout. Improve heading typography, refine the ProductSearchBar styling, enhance call-to-action button prominence, and ensure the features section uses professional iconography and layout.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/LandingPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/LandingPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-87",
-        "summary": "Enhance the Dashboard page with professional data visualization including refined statistics cards, improved progress indicators, and polished layout. Ensure AnalysisHistory, ProgressTracker, and ReminderCard components have cohesive professional styling.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/components/ProgressTracker.tsx",
-          "frontend/src/components/TrendChart.tsx",
-          "frontend/src/components/ReminderCard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/DashboardPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-88",
-        "summary": "Upgrade the DBMSDocumentationPage with a refined academic report design including professional section headers, improved code syntax highlighting, refined diagram presentation, and polished typography suitable for formal documentation export.",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/pages/DBMSDocumentationPage.tsx",
-          "frontend/src/components/diagrams/ERDiagram.tsx",
-          "frontend/src/components/diagrams/SchemaDiagram.tsx",
-          "frontend/src/components/diagrams/DataFlowDiagram.tsx",
-          "frontend/src/components/diagrams/SchemaTable.tsx",
-          "frontend/src/components/SQLQuerySection.tsx",
-          "frontend/src/components/ConnectivityCodeSection.tsx",
-          "frontend/src/components/UIScreenshotGallery.tsx"
-        ],
+        "id": "REQ-91",
+        "summary": "Expand the backend/ingredient-store.mo ingredient database to contain at least 50 valid ingredient records with complete information including name, safety classification (safe/conditional/risky/harmful), description of effects, suitable skin types array, and concern flags (acne-prone, sensitive, clog-prone)",
+        "status": "unknown",
+        "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-89",
-        "summary": "Improve spacing, margins, and padding consistency across all pages and components. Apply professional whitespace management to create breathing room, improve readability, and establish clear visual groupings. Ensure consistent section spacing on all pages.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/pages/FavoritesPage.tsx",
-          "frontend/src/pages/RoutinesPage.tsx",
-          "frontend/src/pages/ProductJournalPage.tsx",
-          "frontend/src/pages/IngredientDictionaryPage.tsx",
-          "frontend/src/pages/ProductSuitabilityCheckerPage.tsx",
-          "frontend/src/pages/ComparisonPage.tsx",
-          "frontend/src/pages/ResourcesPage.tsx",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/tailwind.config.js"
-        ]
+        "id": "REQ-92",
+        "summary": "Expand the product database in backend/main.mo to contain at least 50 valid product records with complete information including product name, brand, description, suitable skin types array, key ingredients array, product category, price range, and concerns addressed",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
-        "id": "REQ-90",
-        "summary": "Add professional loading states, skeleton screens, and transitions throughout the application. Replace basic loading spinners with polished loading indicators, implement smooth page transitions, and add subtle animations to enhance the professional feel without being distracting.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AuthGuard.tsx",
-          "frontend/src/components/ProductRecommendations.tsx",
-          "frontend/src/components/AnalysisHistory.tsx",
-          "frontend/src/components/RoutineList.tsx",
-          "frontend/src/pages/ResultsPage.tsx",
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/pages/FavoritesPage.tsx",
-          "frontend/src/pages/IngredientDictionaryPage.tsx",
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AnalysisHistory.tsx",
-          "frontend/src/pages/DashboardPage.tsx",
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js"
-        ]
+        "id": "REQ-93",
+        "summary": "Create seed data initialization in backend/main.mo that populates the users table with at least 50 valid test user records including unique principal IDs, names, email addresses (optional), timestamps, and associated skin type results covering diverse skin types and concern combinations",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-94",
+        "summary": "Generate seed data for the skin_type_results table in backend/main.mo with at least 50 valid analysis records linked to seed users, including complete data for detected skin type, concern levels (acne, pigmentation, aging, dryness), timestamp, and questionnaire responses",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-95",
+        "summary": "Create seed data for the favorites table in backend/main.mo with at least 50 valid favorite records distributed across seed users, linking users to products they have favorited with timestamps",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-96",
+        "summary": "Generate seed data for the routines table in backend/main.mo with at least 50 valid routine records distributed across seed users, including routine names (e.g., 'Morning Routine', 'Night Routine'), descriptions, and associated routine steps with product assignments, sequence orders, and frequency values",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-97",
+        "summary": "Create seed data for the product_notes table in backend/main.mo with at least 50 valid product note records distributed across seed users and products, including star ratings (1-5), notes text, usage experience descriptions, and timestamps",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-98",
+        "summary": "Generate seed data for the analysis_history table in backend/main.mo with at least 50 valid analysis history records showing users' skin analysis results over time, including timestamps spanning several months to demonstrate progress tracking functionality",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-99",
+        "summary": "Implement a backend admin function or initialization routine in backend/main.mo that populates all database tables with the complete seed data sets (users, products, ingredients, skin type results, favorites, routines, product notes, analysis history) to ensure minimum 50 valid records in each table for comprehensive data validation and testing",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/AnalysisHistory.tsx",
-    "frontend/src/components/ArticleCard.tsx",
-    "frontend/src/components/IngredientCard.tsx",
-    "frontend/src/components/Layout.tsx",
-    "frontend/src/components/LoginButton.tsx",
-    "frontend/src/components/ProductCard.tsx",
-    "frontend/src/components/Questionnaire.tsx",
-    "frontend/src/index.css",
-    "frontend/src/pages/DashboardPage.tsx",
-    "frontend/src/pages/LandingPage.tsx",
-    "frontend/tailwind.config.js",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

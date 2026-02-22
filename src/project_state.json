@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 25,
+  "projectStateVersion": 27,
   "summary": "DBMS mini-project: Cosmetic and skincare product analysis platform with skin type detection, product verification, personalized recommendations, and ingredient awareness",
   "architectural_notes": [
     "Web-based platform for cosmetic/skincare analysis",
@@ -788,6 +788,84 @@
       "summary": "Upgrade the DBMSDocumentationPage with a refined academic report design including professional section headers, improved code syntax highlighting, refined diagram presentation, and polished typography suitable for formal documentation export.",
       "reqIds": [
         "REQ-88"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-53",
+      "summary": "Populate database tables with minimum 50 valid records each for data validation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-54",
+      "summary": "Expand the backend/ingredient-store.mo ingredient database to contain at least 50 valid ingredient records with complete information including name, safety classification (safe/conditional/risky/harmful), description of effects, suitable skin types array, and concern flags (acne-prone, sensitive, clog-prone)",
+      "reqIds": [
+        "REQ-91"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-55",
+      "summary": "Expand the product database in backend/main.mo to contain at least 50 valid product records with complete information including product name, brand, description, suitable skin types array, key ingredients array, product category, price range, and concerns addressed",
+      "reqIds": [
+        "REQ-92"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-56",
+      "summary": "Create seed data initialization in backend/main.mo that populates the users table with at least 50 valid test user records including unique principal IDs, names, email addresses (optional), timestamps, and associated skin type results covering diverse skin types and concern combinations",
+      "reqIds": [
+        "REQ-93"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-57",
+      "summary": "Generate seed data for the skin_type_results table in backend/main.mo with at least 50 valid analysis records linked to seed users, including complete data for detected skin type, concern levels (acne, pigmentation, aging, dryness), timestamp, and questionnaire responses",
+      "reqIds": [
+        "REQ-94"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-58",
+      "summary": "Create seed data for the favorites table in backend/main.mo with at least 50 valid favorite records distributed across seed users, linking users to products they have favorited with timestamps",
+      "reqIds": [
+        "REQ-95"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-59",
+      "summary": "Generate seed data for the routines table in backend/main.mo with at least 50 valid routine records distributed across seed users, including routine names (e.g., 'Morning Routine', 'Night Routine'), descriptions, and associated routine steps with product assignments, sequence orders, and frequency values",
+      "reqIds": [
+        "REQ-96"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-60",
+      "summary": "Create seed data for the product_notes table in backend/main.mo with at least 50 valid product note records distributed across seed users and products, including star ratings (1-5), notes text, usage experience descriptions, and timestamps",
+      "reqIds": [
+        "REQ-97"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-61",
+      "summary": "Generate seed data for the analysis_history table in backend/main.mo with at least 50 valid analysis history records showing users' skin analysis results over time, including timestamps spanning several months to demonstrate progress tracking functionality",
+      "reqIds": [
+        "REQ-98"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-62",
+      "summary": "Implement a backend admin function or initialization routine in backend/main.mo that populates all database tables with the complete seed data sets (users, products, ingredients, skin type results, favorites, routines, product notes, analysis history) to ensure minimum 50 valid records in each table for comprehensive data validation and testing",
+      "reqIds": [
+        "REQ-99"
       ],
       "status": "pending"
     }

@@ -9,7 +9,9 @@ import Map "mo:core/Map";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import IngredientStore "ingredient-store";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   public type SkinType = {
     #oily;
@@ -784,3 +786,4 @@ actor {
     reasoning;
   };
 };
+
