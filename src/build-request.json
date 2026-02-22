@@ -1,0 +1,244 @@
+{
+  "kind": "build_request",
+  "title": "Apply professional design upgrade to the entire application",
+  "projectName": "SkinCare Analyzer",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-80",
+      "text": "Redesign the entire application with a professional, polished visual identity suitable for a healthcare/skincare platform. Upgrade typography to use a professional font stack (e.g., Inter, System UI, or similar modern sans-serif), increase font weights for headings, improve line heights and letter spacing for readability, and ensure consistent hierarchy across all pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All pages use a cohesive professional font stack with appropriate weights",
+        "Typography hierarchy is clear and consistent throughout the application",
+        "Line heights and spacing enhance readability",
+        "Headings use appropriate font sizes and weights to establish clear visual hierarchy"
+      ]
+    },
+    {
+      "id": "REQ-81",
+      "text": "Enhance the color palette to create a more sophisticated and professional appearance. Refine the healthcare-inspired soft greens and whites to include deeper accent tones, professional neutrals (grays), and ensure sufficient contrast ratios for accessibility. Apply consistent color usage for interactive elements (buttons, links, badges) across all components.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Color palette includes refined professional tones with proper contrast",
+        "All interactive elements have consistent hover and active states",
+        "Colors meet WCAG accessibility standards for contrast",
+        "Badge colors for safety classifications maintain professional appearance while being distinguishable"
+      ]
+    },
+    {
+      "id": "REQ-82",
+      "text": "Upgrade card components throughout the application with refined shadows, borders, and spacing. Apply subtle elevation effects, rounded corners, and appropriate padding to create a clean, professional card-based layout. Ensure consistent styling across ProductCard, IngredientCard, ArticleCard, and all other card components.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All card components have consistent shadow depth and border radius",
+        "Cards have appropriate padding and spacing between elements",
+        "Hover states include smooth transitions and subtle elevation changes",
+        "Card layouts are visually balanced and professional"
+      ]
+    },
+    {
+      "id": "REQ-83",
+      "text": "Improve button design across the application with professional styling including refined padding, font weights, hover effects, and loading states. Ensure primary, secondary, and tertiary button variants are clearly differentiated. Add smooth transitions and professional micro-interactions to all interactive elements.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All buttons have consistent sizing, padding, and border radius",
+        "Button variants (primary, secondary, ghost) are clearly distinguishable",
+        "Hover and active states include smooth transitions",
+        "Loading states are professional and visually polished",
+        "Disabled states are clearly indicated with appropriate opacity"
+      ]
+    },
+    {
+      "id": "REQ-84",
+      "text": "Enhance form inputs, textareas, and search fields with professional styling including refined borders, focus states, placeholder text styling, and validation feedback. Apply consistent input height, padding, and error message styling across all form components including Questionnaire, IngredientAnalysis, ProductSuitabilityChecker, and search bars.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All form inputs have consistent styling with refined borders and focus states",
+        "Placeholder text uses appropriate opacity and professional tone",
+        "Validation errors display with clear, professional messaging",
+        "Focus states include smooth transitions and visible indicators",
+        "Input fields maintain professional appearance across all pages"
+      ]
+    },
+    {
+      "id": "REQ-85",
+      "text": "Upgrade the Layout header navigation with a more professional appearance including refined spacing, hover effects, active link indicators, and mobile-responsive behavior. Ensure the logo area, navigation links, and LoginButton are visually balanced and professional.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Header navigation has refined spacing and professional typography",
+        "Navigation links include smooth hover effects and active indicators",
+        "Mobile menu is well-designed and easy to use",
+        "Logo and branding elements are prominently and professionally displayed",
+        "Sticky header behavior is smooth and polished"
+      ]
+    },
+    {
+      "id": "REQ-86",
+      "text": "Refine the LandingPage hero section with a more professional and engaging layout. Improve heading typography, refine the ProductSearchBar styling, enhance call-to-action button prominence, and ensure the features section uses professional iconography and layout.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hero section has professional typography with clear visual hierarchy",
+        "ProductSearchBar is prominently styled with professional appearance",
+        "Call-to-action buttons are visually prominent and polished",
+        "Feature cards use consistent professional styling",
+        "Overall landing page conveys trust and professionalism"
+      ]
+    },
+    {
+      "id": "REQ-87",
+      "text": "Enhance the Dashboard page with professional data visualization including refined statistics cards, improved progress indicators, and polished layout. Ensure AnalysisHistory, ProgressTracker, and ReminderCard components have cohesive professional styling.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Statistics cards have professional styling with clear metrics display",
+        "Progress indicators and trend charts are visually polished",
+        "Analysis history cards have refined typography and spacing",
+        "Overall dashboard layout is clean and professional",
+        "Empty states are professionally designed with clear guidance"
+      ]
+    },
+    {
+      "id": "REQ-88",
+      "text": "Upgrade the DBMSDocumentationPage with a refined academic report design including professional section headers, improved code syntax highlighting, refined diagram presentation, and polished typography suitable for formal documentation export.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Documentation page uses professional academic report styling",
+        "Section headers are clearly hierarchical and well-spaced",
+        "Code blocks have professional syntax highlighting",
+        "Diagrams are well-integrated with appropriate sizing and spacing",
+        "Typography is suitable for formal documentation and PDF export",
+        "PDFExportButton is prominently and professionally styled"
+      ]
+    },
+    {
+      "id": "REQ-89",
+      "text": "Improve spacing, margins, and padding consistency across all pages and components. Apply professional whitespace management to create breathing room, improve readability, and establish clear visual groupings. Ensure consistent section spacing on all pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All pages have consistent spacing between sections",
+        "Component padding is uniform and professional",
+        "Whitespace is effectively used to improve readability",
+        "Related elements are visually grouped with appropriate spacing",
+        "Overall layout feels balanced and uncluttered"
+      ]
+    },
+    {
+      "id": "REQ-90",
+      "text": "Add professional loading states, skeleton screens, and transitions throughout the application. Replace basic loading spinners with polished loading indicators, implement smooth page transitions, and add subtle animations to enhance the professional feel without being distracting.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "design it as a proffessional one"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Loading states use professional skeleton screens or refined spinners",
+        "Page transitions are smooth and polished",
+        "Animations are subtle and enhance user experience",
+        "Loading indicators are contextual and well-placed",
+        "All transitions maintain the professional aesthetic"
+      ]
+    }
+  ],
+  "constraints": [
+    "Maintain the existing healthcare-inspired soft green color theme as the base palette while refining it",
+    "Preserve all existing functionality and component behavior",
+    "Do not modify files in frontend/src/hooks/useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, or frontend/src/components/ui",
+    "Ensure all design changes are responsive and work across mobile, tablet, and desktop viewports",
+    "Maintain accessibility standards (WCAG AA minimum) for all design changes"
+  ],
+  "nonGoals": [
+    "Changing the core color scheme from healthcare-inspired greens and whites",
+    "Adding new features or functionality",
+    "Modifying backend logic or data structures",
+    "Changing the application architecture or routing structure",
+    "Redesigning the fundamental layout structure of existing pages"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

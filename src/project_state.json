@@ -1,0 +1,799 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 25,
+  "summary": "DBMS mini-project: Cosmetic and skincare product analysis platform with skin type detection, product verification, personalized recommendations, and ingredient awareness",
+  "architectural_notes": [
+    "Web-based platform for cosmetic/skincare analysis",
+    "Planned features: skin analysis, product verification, personalized recommendations, ingredient database, routine planner, user reviews, multi-language support, data insights",
+    "Starting with skin type detection questionnaire as MVP",
+    "Ingredient analysis feature will classify ingredients as Safe, Conditional, Risky, or Harmful based on skin type compatibility",
+    "System will provide skin compatibility scores and explanations for flagged ingredients",
+    "Product Suitability Checker feature searches products by name or analyzes entered ingredient lists",
+    "Evaluation uses three criteria: ingredient safety score, skin-type compatibility match, concern-based relevance",
+    "Output classified as Suitable (✅), Use With Caution (⚠️), or Not Recommended (❌)",
+    "Explanation panel shows flagged ingredients, scientific reasoning, and safer alternatives",
+    "Product search includes live autocomplete showing matching products as user types"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-multi-step-questionnaire-form-that-collects-user-information-about-their-skin-characteristics-including-oil-levels-dryness-sensitivity-pore-size-and-common-skin-concerns",
+      "title": "Create a multi-step questionnaire form that collects user information about their skin characteristics including oil levels, dryness, sensitivity, pore size, and common skin concerns",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-skin-type-detection-results-to-the-user-with-a-clear-description-of-their-identified-skin-type-and-its-characteristics",
+      "title": "Display skin type detection results to the user with a clear description of their identified skin type and its characteristics",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-clean-professional-healthcare-inspired-visual-theme-with-soft-greens-and-whites-minimal-design-clear-typography-and-calming-aesthetic-suitable-for-a-skincare-analysis-platform",
+      "title": "Apply a clean, professional healthcare-inspired visual theme with soft greens and whites, minimal design, clear typography, and calming aesthetic suitable for a skincare analysis platform",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-react-query-hook-to-fetch-product-recommendations-based-on-the-user-s-detected-skin-type-from-the-backend",
+      "title": "Create a React Query hook to fetch product recommendations based on the user's detected skin type from the backend",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-product-recommendations-section-to-the-resultsdisplay-component-that-shows-recommended-products-grouped-by-category-with-product-cards-displaying-name-brand-description-key-ingredients-and-price-range",
+      "title": "Add a product recommendations section to the ResultsDisplay component that shows recommended products grouped by category with product cards displaying name, brand, description, key ingredients, and price range",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-an-empty-state-message-in-the-recommendations-section-when-no-products-are-available-for-the-detected-skin-type-prompting-users-that-recommendations-are-being-curated",
+      "title": "Display an empty state message in the recommendations section when no products are available for the detected skin type, prompting users that recommendations are being curated",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-react-query-hook-to-submit-ingredient-lists-to-the-backend-for-analysis-and-fetch-the-compatibility-score-and-detailed-ingredient-breakdown",
+      "title": "Create a React Query hook to submit ingredient lists to the backend for analysis and fetch the compatibility score and detailed ingredient breakdown",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-ingredientanalysis-page-component-with-a-textarea-for-users-to-paste-or-type-ingredient-lists-a-button-to-trigger-analysis-and-sections-to-display-the-compatibility-score-overall-verdict-and-a-detailed-breakdown-of-each-ingredient-with-its-safety-classification-compatibility-status-and-explanation",
+      "title": "Create an IngredientAnalysis page component with a textarea for users to paste or type ingredient lists, a button to trigger analysis, and sections to display the compatibility score, overall verdict, and a detailed breakdown of each ingredient with its safety classification, compatibility status, and explanation",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-visual-styling-to-the-ingredient-analysis-results-using-color-coded-badges-for-safety-classifications-green-for-safe-yellow-for-conditional-orange-for-risky-and-red-for-harmful-with-the-overall-compatibility-score-displayed-as-a-large-circular-gauge-or-progress-bar",
+      "title": "Add visual styling to the ingredient analysis results using color-coded badges for safety classifications: green for safe, yellow for conditional, orange for risky, and red for harmful, with the overall compatibility score displayed as a large circular gauge or progress bar",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-navigation-link-to-the-ingredient-analysis-feature-in-the-layout-header-and-on-the-landingpage-features-section-with-appropriate-icon-and-descriptive-text",
+      "title": "Add a navigation link to the ingredient analysis feature in the Layout header and on the LandingPage features section, with appropriate icon and descriptive text",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-a-helpful-example-or-placeholder-text-in-the-ingredient-analysis-textarea-showing-a-sample-ingredient-list-format-e-g-water-glycerin-niacinamide-hyaluronic-acid-to-guide-users-on-proper-input-format",
+      "title": "Display a helpful example or placeholder text in the ingredient analysis textarea showing a sample ingredient list format (e.g., 'Water, Glycerin, Niacinamide, Hyaluronic Acid...') to guide users on proper input format",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-input-validation-to-parse-ingredient-lists-by-splitting-on-commas-and-trimming-whitespace-handling-various-input-formats-gracefully-and-showing-a-warning-if-the-input-appears-invalid-or-empty-before-submitting-to-the-backend",
+      "title": "Add input validation to parse ingredient lists by splitting on commas and trimming whitespace, handling various input formats gracefully, and showing a warning if the input appears invalid or empty before submitting to the backend",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-questionnaire-in-frontend-src-utils-questionnairedata-ts-to-include-4-additional-multiple-choice-questions-about-specific-skin-concerns-acne-none-occasional-frequent-severe-pigmentation-issues-none-mild-moderate-significant-aging-concerns-none-fine-lines-wrinkles-loss-of-firmness-and-dryness-level-none-mild-moderate-severe-each-question-should-have-4-options-with-associated-score-values",
+      "title": "Extend the questionnaire in frontend/src/utils/questionnaireData.ts to include 4 additional multiple-choice questions about specific skin concerns: acne (none/occasional/frequent/severe), pigmentation issues (none/mild/moderate/significant), aging concerns (none/fine lines/wrinkles/loss of firmness), and dryness level (none/mild/moderate/severe). Each question should have 4 options with associated score values.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-questionnaire-component-in-frontend-src-components-questionnaire-tsx-to-collect-and-save-user-responses-to-the-new-skin-concern-questions-alongside-the-existing-skin-type-detection-storing-them-in-the-user-s-profile-or-skin-type-result-data-structure",
+      "title": "Update the Questionnaire component in frontend/src/components/Questionnaire.tsx to collect and save user responses to the new skin concern questions alongside the existing skin type detection, storing them in the user's profile or skin type result data structure.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-resultsdisplay-component-in-frontend-src-components-resultsdisplay-tsx-to-display-the-user-s-identified-skin-concerns-alongside-their-skin-type-showing-which-specific-concerns-were-detected-acne-pigmentation-aging-dryness-and-their-severity-levels",
+      "title": "Update the ResultsDisplay component in frontend/src/components/ResultsDisplay.tsx to display the user's identified skin concerns alongside their skin type, showing which specific concerns were detected (acne, pigmentation, aging, dryness) and their severity levels.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-productrecommendations-component-in-frontend-src-components-productrecommendations-tsx-to-indicate-which-specific-skin-concerns-each-recommended-product-addresses-displaying-concern-tags-or-badges-on-product-cards-e-g-anti-acne-brightening-anti-aging-hydrating",
+      "title": "Enhance the ProductRecommendations component in frontend/src/components/ProductRecommendations.tsx to indicate which specific skin concerns each recommended product addresses, displaying concern tags or badges on product cards (e.g., 'Anti-Acne', 'Brightening', 'Anti-Aging', 'Hydrating').",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-user-dashboard-page-that-displays-the-user-s-skin-analysis-history-showing-a-timeline-of-past-questionnaire-results-with-dates-detected-skin-types-and-identified-concerns-over-time",
+      "title": "Create a user dashboard page that displays the user's skin analysis history, showing a timeline of past questionnaire results with dates, detected skin types, and identified concerns over time",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-favorites-system-allowing-users-to-save-and-bookmark-products-they-re-interested-in-with-a-dedicated-my-favorites-section-accessible-from-the-dashboard",
+      "title": "Add a favorites system allowing users to save and bookmark products they're interested in, with a dedicated 'My Favorites' section accessible from the dashboard",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-custom-skincare-routine-builder-where-users-can-create-named-routines-e-g-morning-routine-night-routine-by-selecting-products-from-recommendations-or-favorites-specifying-order-and-frequency",
+      "title": "Implement a custom skincare routine builder where users can create named routines (e.g., 'Morning Routine', 'Night Routine') by selecting products from recommendations or favorites, specifying order and frequency",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-comparison-tool-that-allows-users-to-compare-two-or-three-products-side-by-side-showing-their-ingredients-safety-scores-price-ranges-and-suitability-for-the-user-s-skin-type",
+      "title": "Add a comparison tool that allows users to compare two or three products side-by-side, showing their ingredients, safety scores, price ranges, and suitability for the user's skin type",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-educational-resources-section-with-skincare-tips-ingredient-glossary-and-articles-about-different-skin-types-and-concerns-organized-by-category-and-searchable",
+      "title": "Create an educational resources section with skincare tips, ingredient glossary, and articles about different skin types and concerns, organized by category and searchable",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-progress-tracking-and-insights-that-show-users-how-their-skin-concerns-have-changed-over-time-based-on-repeated-questionnaires-with-visual-charts-or-trend-indicators",
+      "title": "Add progress tracking and insights that show users how their skin concerns have changed over time based on repeated questionnaires, with visual charts or trend indicators",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-product-notes-feature-allowing-users-to-add-personal-notes-ratings-and-usage-experiences-to-products-they-ve-tried-creating-a-personal-product-journal",
+      "title": "Implement a product notes feature allowing users to add personal notes, ratings, and usage experiences to products they've tried, creating a personal product journal",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-notification-or-reminder-system-that-suggests-when-users-should-retake-the-questionnaire-e-g-every-3-months-or-update-their-routine-based-on-seasonal-changes",
+      "title": "Add a notification or reminder system that suggests when users should retake the questionnaire (e.g., every 3 months) or update their routine based on seasonal changes",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-ingredient-dictionary-page-with-a-searchable-database-of-all-ingredients-showing-detailed-information-including-scientific-names-benefits-concerns-and-which-products-contain-them",
+      "title": "Create an ingredient dictionary page with a searchable database of all ingredients, showing detailed information including scientific names, benefits, concerns, and which products contain them",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-export-feature-that-allows-users-to-download-or-print-their-skin-analysis-results-product-recommendations-and-routines-as-a-pdf-or-formatted-document",
+      "title": "Add an export feature that allows users to download or print their skin analysis results, product recommendations, and routines as a PDF or formatted document",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-react-query-hook-useproductsuitabilitycheck-that-accepts-either-a-product-name-or-ingredient-list-string-retrieves-the-current-user-s-skin-type-and-concerns-from-their-profile-calls-the-backend-evaluateproductsuitability-function-and-returns-the-suitability-classification-compatibility-score-evaluation-details-and-explanation-panel",
+      "title": "Create a React Query hook useProductSuitabilityCheck that accepts either a product name or ingredient list string, retrieves the current user's skin type and concerns from their profile, calls the backend evaluateProductSuitability function, and returns the suitability classification, compatibility score, evaluation details, and explanation panel",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-productsuitabilitychecker-page-component-at-frontend-src-pages-productsuitabilitycheckerpage-tsx-wrapped-in-authguard-with-a-search-input-field-labeled-enter-product-name-or-ingredient-list-that-accepts-either-a-product-name-or-comma-separated-ingredient-list-an-analyze-product-button-that-triggers-the-suitability-check-and-result-sections-displaying-the-classification-badge-suitable-use-with-caution-not-recommended-compatibility-score-as-a-visual-indicator-and-a-detailed-explanation-panel-showing-highlighted-ingredients-scientific-reasoning-and-suggested-alternatives",
+      "title": "Create a ProductSuitabilityChecker page component at frontend/src/pages/ProductSuitabilityCheckerPage.tsx wrapped in AuthGuard with a search input field labeled 'Enter product name or ingredient list' that accepts either a product name or comma-separated ingredient list, an 'Analyze Product' button that triggers the suitability check, and result sections displaying the classification badge (✅ Suitable / ⚠️ Use With Caution / ❌ Not Recommended), compatibility score as a visual indicator, and a detailed explanation panel showing highlighted ingredients, scientific reasoning, and suggested alternatives",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-input-validation-to-the-productsuitabilitychecker-page-that-shows-a-warning-message-if-the-input-field-is-empty-when-the-analyze-button-is-clicked-and-provides-a-helpful-placeholder-text-example-showing-sample-format-like-product-name-cerave-hydrating-cleanser-or-ingredients-water-glycerin-niacinamide-ceramides",
+      "title": "Add input validation to the ProductSuitabilityChecker page that shows a warning message if the input field is empty when the analyze button is clicked, and provides a helpful placeholder text example showing sample format like 'Product name: CeraVe Hydrating Cleanser' or 'Ingredients: Water, Glycerin, Niacinamide, Ceramides...'",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-productsuitabilitychecker-page-to-the-router-configuration-in-frontend-src-app-tsx-with-path-product-checker-and-add-a-navigation-link-to-the-product-suitability-checker-in-the-layout-header-navigation-menu-and-on-the-landingpage-features-section-with-an-appropriate-icon-search-or-magnifying-glass-icon-and-descriptive-text-like-check-product-suitability-or-verify-products",
+      "title": "Add the ProductSuitabilityChecker page to the router configuration in frontend/src/App.tsx with path '/product-checker', and add a navigation link to the Product Suitability Checker in the Layout header navigation menu and on the LandingPage features section with an appropriate icon (search or magnifying glass icon) and descriptive text like 'Check Product Suitability' or 'Verify Products'",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-productsuitabilitychecker-page-component-in-frontend-src-pages-productsuitabilitycheckerpage-tsx-to-display-the-enhanced-scientific-reasoning-from-the-backend-in-the-explanation-panel-showing-detailed-scientific-rationale-for-each-ingredient-s-classification-and-its-effects-on-the-user-s-skin",
+      "title": "Update the ProductSuitabilityChecker page component in frontend/src/pages/ProductSuitabilityCheckerPage.tsx to display the enhanced scientific reasoning from the backend in the explanation panel, showing detailed scientific rationale for each ingredient's classification and its effects on the user's skin",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-react-query-hook-useproductautocomplete-in-frontend-src-hooks-usequeries-ts-that-fetches-all-product-names-from-the-backend-and-filters-them-based-on-the-user-s-input-string-returning-matching-products-as-suggestions",
+      "title": "Create a React Query hook useProductAutocomplete in frontend/src/hooks/useQueries.ts that fetches all product names from the backend and filters them based on the user's input string, returning matching products as suggestions",
+      "reqIds": [
+        "REQ-60"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-autocomplete-dropdown-functionality-in-the-productsuitabilitychecker-page-component-in-frontend-src-pages-productsuitabilitycheckerpage-tsx-that-displays-product-name-suggestions-as-the-user-types-filtering-results-based-on-the-entered-letters-and-allowing-users-to-select-a-product-from-the-dropdown-to-populate-the-input-field",
+      "title": "Implement autocomplete dropdown functionality in the ProductSuitabilityChecker page component in frontend/src/pages/ProductSuitabilityCheckerPage.tsx that displays product name suggestions as the user types, filtering results based on the entered letters and allowing users to select a product from the dropdown to populate the input field",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-dynamic-product-search-bar-component-to-the-landingpage-frontend-src-pages-landingpage-tsx-in-the-hero-section-positioned-prominently-above-or-alongside-the-existing-call-to-action-buttons",
+      "title": "Add a dynamic product search bar component to the LandingPage (frontend/src/pages/LandingPage.tsx) in the hero section, positioned prominently above or alongside the existing call-to-action buttons",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-real-time-autocomplete-functionality-in-the-product-search-bar-that-triggers-the-useproductautocomplete-hook-as-the-user-types-displaying-matching-product-names-in-a-dropdown-list-below-the-search-field-with-prefix-based-filtering",
+      "title": "Implement real-time autocomplete functionality in the product search bar that triggers the useProductAutocomplete hook as the user types, displaying matching product names in a dropdown list below the search field with prefix-based filtering",
+      "reqIds": [
+        "REQ-63"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-click-handler-to-autocomplete-suggestions-that-allows-users-to-select-a-product-from-the-dropdown-populating-the-search-field-with-the-selected-product-name-and-automatically-redirecting-to-the-productsuitabilitycheckerpage-product-checker-with-the-selected-product-pre-filled-in-the-analysis-input-field",
+      "title": "Add click handler to autocomplete suggestions that allows users to select a product from the dropdown, populating the search field with the selected product name and automatically redirecting to the ProductSuitabilityCheckerPage (/product-checker) with the selected product pre-filled in the analysis input field",
+      "reqIds": [
+        "REQ-64"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-keyboard-navigation-support-to-the-autocomplete-dropdown-allowing-users-to-navigate-suggestions-using-arrow-keys-up-down-select-with-enter-key-and-dismiss-with-escape-key",
+      "title": "Add keyboard navigation support to the autocomplete dropdown allowing users to navigate suggestions using arrow keys (up/down), select with Enter key, and dismiss with Escape key",
+      "reqIds": [
+        "REQ-65"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-style-the-autocomplete-dropdown-with-the-healthcare-inspired-theme-using-soft-emerald-greens-appropriate-shadows-and-hover-states-ensuring-it-matches-the-existing-design-system-and-displays-clearly-above-other-content",
+      "title": "Style the autocomplete dropdown with the healthcare-inspired theme using soft emerald greens, appropriate shadows, and hover states, ensuring it matches the existing design system and displays clearly above other content",
+      "reqIds": [
+        "REQ-66"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-entity-relationship-er-diagram-showing-all-entities-in-the-skincare-analyzer-system-including-user-skintyperesult-product-ingredient-favorite-routine-routinestep-productnote-and-analysishistory-with-their-attributes-and-relationships-one-to-many-many-to-many-use-standard-er-diagram-notation-with-entities-as-rectangles-attributes-as-ovals-and-relationships-as-diamonds-include-cardinality-notation-1-1-1-n-m-n-for-all-relationships",
+      "title": "Create an Entity-Relationship (ER) diagram showing all entities in the skincare analyzer system including User, SkinTypeResult, Product, Ingredient, Favorite, Routine, RoutineStep, ProductNote, and AnalysisHistory with their attributes and relationships (one-to-many, many-to-many). Use standard ER diagram notation with entities as rectangles, attributes as ovals, and relationships as diamonds. Include cardinality notation (1:1, 1:N, M:N) for all relationships.",
+      "reqIds": [
+        "REQ-67"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-database-schema-diagram-showing-the-normalized-table-structures-with-all-tables-users-skin-type-results-products-ingredients-product-ingredients-junction-table-favorites-routines-routine-steps-product-notes-analysis-history-their-columns-with-data-types-primary-keys-pk-foreign-keys-fk-and-relationships-with-referential-integrity-constraints-display-using-sql-style-table-notation-with-column-names-types-and-constraints-clearly-labeled",
+      "title": "Create a database schema diagram showing the normalized table structures with all tables (users, skin_type_results, products, ingredients, product_ingredients junction table, favorites, routines, routine_steps, product_notes, analysis_history), their columns with data types, primary keys (PK), foreign keys (FK), and relationships with referential integrity constraints. Display using SQL-style table notation with column names, types, and constraints clearly labeled.",
+      "reqIds": [
+        "REQ-68"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-comprehensive-sql-query-examples-demonstrating-all-major-database-operations-including-create-table-statements-for-all-tables-with-constraints-insert-statements-with-sample-data-for-users-products-ingredients-and-relationships-select-queries-for-common-use-cases-fetch-user-profile-get-product-recommendations-by-skin-type-analyze-ingredients-retrieve-user-favorites-fetch-routines-with-steps-update-statements-for-modifying-user-profiles-and-product-notes-delete-statements-for-removing-favorites-and-routines-and-complex-join-queries-showing-relationships-between-tables-e-g-fetching-products-with-their-ingredients-user-analysis-history-with-concern-details",
+      "title": "Generate comprehensive SQL query examples demonstrating all major database operations including: CREATE TABLE statements for all tables with constraints, INSERT statements with sample data for users, products, ingredients, and relationships, SELECT queries for common use cases (fetch user profile, get product recommendations by skin type, analyze ingredients, retrieve user favorites, fetch routines with steps), UPDATE statements for modifying user profiles and product notes, DELETE statements for removing favorites and routines, and complex JOIN queries showing relationships between tables (e.g., fetching products with their ingredients, user analysis history with concern details).",
+      "reqIds": [
+        "REQ-69"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-comprehensive-ui-design-documentation-section-showing-screenshots-of-all-major-pages-in-the-application-landing-page-with-search-bar-questionnaire-page-with-multi-step-form-results-page-showing-skin-type-and-concerns-product-recommendations-page-with-categorized-products-ingredient-analysis-page-with-safety-badges-product-suitability-checker-with-autocomplete-search-dashboard-with-analysis-history-and-progress-tracking-favorites-page-routine-builder-product-journal-ingredient-dictionary-and-resources-page-include-annotations-describing-key-ui-elements-interactions-and-design-patterns-used",
+      "title": "Create a comprehensive UI design documentation section showing screenshots of all major pages in the application: Landing Page with search bar, Questionnaire page with multi-step form, Results page showing skin type and concerns, Product Recommendations page with categorized products, Ingredient Analysis page with safety badges, Product Suitability Checker with autocomplete search, Dashboard with analysis history and progress tracking, Favorites page, Routine Builder, Product Journal, Ingredient Dictionary, and Resources page. Include annotations describing key UI elements, interactions, and design patterns used.",
+      "reqIds": [
+        "REQ-70"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-document-the-database-connectivity-implementation-showing-the-integration-between-the-motoko-backend-internet-computer-canister-and-the-react-frontend-include-backend-actor-initialization-code-from-useactor-ts-hook-showing-how-the-frontend-establishes-connection-to-the-canister-authentication-flow-using-internet-identity-from-useinternetidentity-ts-react-query-hook-examples-from-usequeries-ts-demonstrating-data-fetching-patterns-usegetuserprofile-usegetrecommendations-useanalyzeingredients-useproductsuitability-mutation-examples-for-creating-updating-data-createskintyperesult-addfavorite-createroutine-addproductnote-error-handling-and-loading-states-and-data-flow-diagram-showing-request-response-cycle-between-frontend-and-backend-with-authentication-layer",
+      "title": "Document the database connectivity implementation showing the integration between the Motoko backend (Internet Computer canister) and the React frontend. Include: backend actor initialization code from useActor.ts hook showing how the frontend establishes connection to the canister, authentication flow using Internet Identity from useInternetIdentity.ts, React Query hook examples from useQueries.ts demonstrating data fetching patterns (useGetUserProfile, useGetRecommendations, useAnalyzeIngredients, useProductSuitability), mutation examples for creating/updating data (createSkinTypeResult, addFavorite, createRoutine, addProductNote), error handling and loading states, and data flow diagram showing request/response cycle between frontend and backend with authentication layer.",
+      "reqIds": [
+        "REQ-71"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-dbms-project-documentation-page-component-at-frontend-src-pages-dbmsdocumentationpage-tsx-that-consolidates-all-project-documentation-in-a-structured-report-format-matching-the-academic-project-template-include-sections-for-project-title-and-aim-er-diagram-rendered-as-svg-or-embedded-image-database-schema-rendered-as-formatted-table-diagram-sql-queries-with-syntax-highlighted-code-blocks-organized-by-operation-type-create-insert-select-update-delete-join-ui-design-section-with-organized-screenshot-gallery-db-connectivity-section-with-code-snippets-and-data-flow-diagram-output-section-showcasing-application-features-and-result-conclusion-section-style-using-the-healthcare-inspired-theme-with-proper-spacing-headings-and-print-friendly-css",
+      "title": "Create a DBMS Project Documentation page component at frontend/src/pages/DBMSDocumentationPage.tsx that consolidates all project documentation in a structured report format matching the academic project template. Include sections for: Project Title and Aim, ER Diagram (rendered as SVG or embedded image), Database Schema (rendered as formatted table diagram), SQL Queries with syntax-highlighted code blocks organized by operation type (CREATE, INSERT, SELECT, UPDATE, DELETE, JOIN), UI Design section with organized screenshot gallery, DB Connectivity section with code snippets and data flow diagram, Output section showcasing application features, and Result/Conclusion section. Style using the healthcare-inspired theme with proper spacing, headings, and print-friendly CSS.",
+      "reqIds": [
+        "REQ-72"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-dbms-documentation-page-to-the-router-configuration-in-frontend-src-app-tsx-with-path-dbms-docs-and-add-a-navigation-link-labeled-project-documentation-or-dbms-report-to-the-layout-header-navigation-menu-and-optionally-to-the-landingpage-features-section-using-an-appropriate-icon-document-or-file-text-icon-to-access-the-comprehensive-project-documentation",
+      "title": "Add the DBMS Documentation page to the router configuration in frontend/src/App.tsx with path '/dbms-docs' and add a navigation link labeled 'Project Documentation' or 'DBMS Report' to the Layout header navigation menu and optionally to the LandingPage features section, using an appropriate icon (document or file-text icon) to access the comprehensive project documentation.",
+      "reqIds": [
+        "REQ-73"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-pdfexportbutton-component-in-frontend-src-components-pdfexportbutton-tsx-that-triggers-pdf-generation-of-the-dbmsdocumentationpage-content-when-clicked-including-all-sections-aim-er-diagram-schema-diagram-sql-queries-ui-screenshots-connectivity-code-conclusions",
+      "title": "Create a PDFExportButton component in frontend/src/components/PDFExportButton.tsx that triggers PDF generation of the DBMSDocumentationPage content when clicked, including all sections (AIM, ER Diagram, Schema Diagram, SQL Queries, UI Screenshots, Connectivity Code, Conclusions)",
+      "reqIds": [
+        "REQ-75"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-pdf-generation-logic-in-the-pdfexportbutton-component-that-captures-the-entire-dbmsdocumentationpage-content-converts-it-to-pdf-format-with-proper-styling-page-breaks-and-layout-preservation-and-triggers-a-browser-download-with-filename-skincare-analyzer-dbms-documentation-pdf",
+      "title": "Implement PDF generation logic in the PDFExportButton component that captures the entire DBMSDocumentationPage content, converts it to PDF format with proper styling, page breaks, and layout preservation, and triggers a browser download with filename 'SkinCare-Analyzer-DBMS-Documentation.pdf'",
+      "reqIds": [
+        "REQ-76"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-pdfexportbutton-component-to-the-dbmsdocumentationpage-component-frontend-src-pages-dbmsdocumentationpage-tsx-positioning-it-prominently-at-the-top-of-the-page-near-the-title-with-a-sticky-or-fixed-position-option-for-easy-access-while-scrolling-through-the-documentation",
+      "title": "Add the PDFExportButton component to the DBMSDocumentationPage component (frontend/src/pages/DBMSDocumentationPage.tsx), positioning it prominently at the top of the page near the title, with a sticky or fixed position option for easy access while scrolling through the documentation",
+      "reqIds": [
+        "REQ-77"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-error-handling-and-user-feedback-to-the-pdf-export-process-displaying-a-loading-spinner-or-progress-indicator-during-pdf-generation-showing-a-success-toast-notification-when-the-pdf-is-ready-for-download-and-displaying-an-error-message-if-pdf-generation-fails",
+      "title": "Add error handling and user feedback to the PDF export process, displaying a loading spinner or progress indicator during PDF generation, showing a success toast notification when the PDF is ready for download, and displaying an error message if PDF generation fails",
+      "reqIds": [
+        "REQ-78"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-optimize-pdf-generation-to-handle-large-documentation-content-efficiently-by-implementing-pagination-compression-or-lazy-loading-of-diagram-images-to-ensure-the-pdf-exports-successfully-without-memory-issues-or-browser-crashes",
+      "title": "Optimize PDF generation to handle large documentation content efficiently by implementing pagination, compression, or lazy loading of diagram images to ensure the PDF exports successfully without memory issues or browser crashes",
+      "reqIds": [
+        "REQ-79"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-redesign-the-entire-application-with-a-professional-polished-visual-identity-suitable-for-a-healthcare-skincare-platform-upgrade-typography-to-use-a-professional-font-stack-e-g-inter-system-ui-or-similar-modern-sans-serif-increase-font-weights-for-headings-improve-line-heights-and-letter-spacing-for-readability-and-ensure-consistent-hierarchy-across-all-pages",
+      "title": "Redesign the entire application with a professional, polished visual identity suitable for a healthcare/skincare platform. Upgrade typography to use a professional font stack (e.g., Inter, System UI, or similar modern sans-serif), increase font weights for headings, improve line heights and letter spacing for readability, and ensure consistent hierarchy across all pages.",
+      "reqIds": [
+        "REQ-80"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-color-palette-to-create-a-more-sophisticated-and-professional-appearance-refine-the-healthcare-inspired-soft-greens-and-whites-to-include-deeper-accent-tones-professional-neutrals-grays-and-ensure-sufficient-contrast-ratios-for-accessibility-apply-consistent-color-usage-for-interactive-elements-buttons-links-badges-across-all-components",
+      "title": "Enhance the color palette to create a more sophisticated and professional appearance. Refine the healthcare-inspired soft greens and whites to include deeper accent tones, professional neutrals (grays), and ensure sufficient contrast ratios for accessibility. Apply consistent color usage for interactive elements (buttons, links, badges) across all components.",
+      "reqIds": [
+        "REQ-81"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-upgrade-card-components-throughout-the-application-with-refined-shadows-borders-and-spacing-apply-subtle-elevation-effects-rounded-corners-and-appropriate-padding-to-create-a-clean-professional-card-based-layout-ensure-consistent-styling-across-productcard-ingredientcard-articlecard-and-all-other-card-components",
+      "title": "Upgrade card components throughout the application with refined shadows, borders, and spacing. Apply subtle elevation effects, rounded corners, and appropriate padding to create a clean, professional card-based layout. Ensure consistent styling across ProductCard, IngredientCard, ArticleCard, and all other card components.",
+      "reqIds": [
+        "REQ-82"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-button-design-across-the-application-with-professional-styling-including-refined-padding-font-weights-hover-effects-and-loading-states-ensure-primary-secondary-and-tertiary-button-variants-are-clearly-differentiated-add-smooth-transitions-and-professional-micro-interactions-to-all-interactive-elements",
+      "title": "Improve button design across the application with professional styling including refined padding, font weights, hover effects, and loading states. Ensure primary, secondary, and tertiary button variants are clearly differentiated. Add smooth transitions and professional micro-interactions to all interactive elements.",
+      "reqIds": [
+        "REQ-83"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-form-inputs-textareas-and-search-fields-with-professional-styling-including-refined-borders-focus-states-placeholder-text-styling-and-validation-feedback-apply-consistent-input-height-padding-and-error-message-styling-across-all-form-components-including-questionnaire-ingredientanalysis-productsuitabilitychecker-and-search-bars",
+      "title": "Enhance form inputs, textareas, and search fields with professional styling including refined borders, focus states, placeholder text styling, and validation feedback. Apply consistent input height, padding, and error message styling across all form components including Questionnaire, IngredientAnalysis, ProductSuitabilityChecker, and search bars.",
+      "reqIds": [
+        "REQ-84"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-upgrade-the-layout-header-navigation-with-a-more-professional-appearance-including-refined-spacing-hover-effects-active-link-indicators-and-mobile-responsive-behavior-ensure-the-logo-area-navigation-links-and-loginbutton-are-visually-balanced-and-professional",
+      "title": "Upgrade the Layout header navigation with a more professional appearance including refined spacing, hover effects, active link indicators, and mobile-responsive behavior. Ensure the logo area, navigation links, and LoginButton are visually balanced and professional.",
+      "reqIds": [
+        "REQ-85"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-the-landingpage-hero-section-with-a-more-professional-and-engaging-layout-improve-heading-typography-refine-the-productsearchbar-styling-enhance-call-to-action-button-prominence-and-ensure-the-features-section-uses-professional-iconography-and-layout",
+      "title": "Refine the LandingPage hero section with a more professional and engaging layout. Improve heading typography, refine the ProductSearchBar styling, enhance call-to-action button prominence, and ensure the features section uses professional iconography and layout.",
+      "reqIds": [
+        "REQ-86"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-dashboard-page-with-professional-data-visualization-including-refined-statistics-cards-improved-progress-indicators-and-polished-layout-ensure-analysishistory-progresstracker-and-remindercard-components-have-cohesive-professional-styling",
+      "title": "Enhance the Dashboard page with professional data visualization including refined statistics cards, improved progress indicators, and polished layout. Ensure AnalysisHistory, ProgressTracker, and ReminderCard components have cohesive professional styling.",
+      "reqIds": [
+        "REQ-87"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-spacing-margins-and-padding-consistency-across-all-pages-and-components-apply-professional-whitespace-management-to-create-breathing-room-improve-readability-and-establish-clear-visual-groupings-ensure-consistent-section-spacing-on-all-pages",
+      "title": "Improve spacing, margins, and padding consistency across all pages and components. Apply professional whitespace management to create breathing room, improve readability, and establish clear visual groupings. Ensure consistent section spacing on all pages.",
+      "reqIds": [
+        "REQ-89"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-professional-loading-states-skeleton-screens-and-transitions-throughout-the-application-replace-basic-loading-spinners-with-polished-loading-indicators-implement-smooth-page-transitions-and-add-subtle-animations-to-enhance-the-professional-feel-without-being-distracting",
+      "title": "Add professional loading states, skeleton screens, and transitions throughout the application. Replace basic loading spinners with polished loading indicators, implement smooth page transitions, and add subtle animations to enhance the professional feel without being distracting.",
+      "reqIds": [
+        "REQ-90"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Skin type detection feature with questionnaire",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Implement backend logic to analyze questionnaire responses and determine skin type classification as one of: oily, dry, combination, sensitive, or normal",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Store user skin type detection results in the backend for future reference and personalization",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Product recommendation feature that suggests suitable products based on detected skin type",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Create a backend data structure to store product information including product name, brand, description, suitable skin types array, key ingredients, product category (cleanser, moisturizer, serum, sunscreen, treatment), and price range",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Implement a backend query function that retrieves product recommendations filtered by the user's detected skin type, returning products marked as suitable for that specific skin type",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add initial seed data with at least 3-5 product recommendations per skin type (oily, dry, combination, sensitive, normal) covering essential categories like cleansers, moisturizers, and treatments",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Ingredient analysis module allowing users to paste/enter ingredient lists and receive safety analysis with compatibility scores based on their skin type",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Create a backend data structure to store ingredient information including ingredient name, safety classification (safe, conditional, risky, harmful), description of effects, suitable skin types array, and concern flags (acne-prone, sensitive, clog-prone)",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add seed data with at least 30-40 common skincare ingredients covering safe ingredients (hyaluronic acid, ceramides, niacinamide, vitamin C, glycerin), conditional ingredients (retinol, AHAs, BHAs, essential oils), risky ingredients (high alcohol content, synthetic fragrances, parabens), and harmful ingredients (hydroquinone above safe limits, formaldehyde-releasing preservatives)",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Implement a backend function that accepts a list of ingredient names and the user's skin type, then analyzes each ingredient against the ingredient database and returns an analysis result including: ingredient name, safety classification, compatibility with user's skin type, concern warnings, and a brief explanation",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Create a backend function that calculates an overall product compatibility score (0-100) based on the ingredient analysis results, where the score is reduced by harmful ingredients (-20 points each), risky ingredients (-10 points), incompatible conditional ingredients (-5 points), and boosted by beneficial safe ingredients (+5 points), returning the score with an overall safety verdict (excellent, good, fair, poor, unsafe)",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Add more ingredient data to the ingredient database for broader analysis coverage",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add at least 50 additional common skincare ingredients to the ingredient database in backend/ingredient-store.mo, covering a broader range of categories including: antioxidants (vitamin E, CoQ10, resveratrol, green tea extract), peptides (matrixyl, argireline, copper peptides), botanical extracts (aloe vera, chamomile, centella asiatica, licorice root), humectants (propylene glycol, butylene glycol, sorbitol), emollients (squalane, jojoba oil, shea butter), preservatives (phenoxyethanol, sodium benzoate, potassium sorbate), and texturizers (dimethicone, carbomer, xanthan gum). Each ingredient must include: name, safety classification (safe/conditional/risky/harmful), description of effects, suitable skin types array, and relevant concern flags.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Include specialized ingredients for common skin concerns in the expanded database: acne treatment ingredients (benzoyl peroxide, salicylic acid, tea tree oil, sulfur), anti-aging ingredients (retinoids, bakuchiol, alpha lipoic acid), hyperpigmentation treatments (kojic acid, arbutin, tranexamic acid, azelaic acid), rosacea-safe ingredients (azelaic acid, zinc oxide, colloidal oatmeal), and barrier repair ingredients (cholesterol, fatty acids, phytosterols). Ensure each ingredient's safety classification and suitable skin types reflect their specific use cases and potential sensitivities.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add ingredient data for commonly questioned or controversial ingredients to help users make informed decisions: fragrance compounds (natural fragrance, synthetic fragrance, linalool, limonene), UV filters (oxybenzone, octinoxate, avobenzone, zinc oxide, titanium dioxide), alcohols (denatured alcohol, cetyl alcohol, stearyl alcohol, cetearyl alcohol), silicones (cyclopentasiloxane, dimethicone crosspolymer, phenyl trimethicone), and potential irritants (SLS, SLES, PEG compounds, mineral oil). Include detailed explanations distinguishing between beneficial and problematic variants within each category.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Add questions about specific skin concerns (acne, pigmentation, aging, dryness) to the questionnaire and tailor recommendations accordingly",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Extend the backend data model in backend/main.mo to store skin concern information (acne level, pigmentation level, aging concerns, dryness level) as part of the user's skin type result, adding new fields to the SkinTypeResult type or creating a new SkinConcerns record type.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Update the getRecommendations function in backend/main.mo to filter and rank product recommendations based on the user's specific skin concerns, prioritizing products that address their reported concerns (e.g., acne-fighting products for users with acne concerns, anti-aging products for aging concerns, hydrating products for dryness, brightening products for pigmentation).",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Add a concerns field to the Product data structure in backend/main.mo (e.g., an array of concern tags like 'acne', 'pigmentation', 'aging', 'dryness') and update the seed product data to include appropriate concern tags for each product based on its key ingredients and intended benefits.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Add creative and professional features to enhance the website's functionality and user experience",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Product Suitability Checker: Search-based analysis feature allowing users to search for a specific product by name or enter ingredient list to determine if it's suitable for their skin type",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Create backend logic to search products by name in the internal database and retrieve stored product information including ingredients and safety data",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Implement fallback analysis that evaluates manually entered ingredient lists when a searched product is not found in the local database",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Build Product Suitability Report generation logic that assesses products using three criteria: ingredient safety score, skin-type compatibility match, and concern-based relevance (for acne, dryness, etc.)",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Create output classification system that categorizes products as: Suitable for Your Skin (✅), Use With Caution (⚠️), or Not Recommended (❌) based on analysis results",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Create a ProductSuitabilityChecker page component with a search field for product name or ingredient list input, a search/analyze button, and sections to display the suitability result with classification badge, compatibility score, and detailed explanation panel",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Add a user explanation panel to the suitability report that highlights ingredients influencing the decision, provides scientific reasoning for warnings or approvals, and suggests safer ingredient alternatives when applicable",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Add a navigation link to the Product Suitability Checker in the Layout header and LandingPage features section with appropriate icon and descriptive text",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Create a backend function searchProductByName that accepts a product name string and searches the internal product database, returning the matching product with its full details (name, brand, ingredients, category, suitable skin types, concerns) if found, or an empty/null result if not found",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Create a backend function evaluateProductSuitability that accepts either a product name or ingredient list string, the user's skin type, and their skin concerns, then analyzes the product using three criteria: (1) ingredient safety score based on classifications from ingredient database, (2) skin-type compatibility match checking if ingredients support or conflict with the user's detected skin type, and (3) concern-based relevance determining whether ingredients help or worsen selected concerns like acne or dryness",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Implement backend classification logic in evaluateProductSuitability that categorizes the overall product suitability into one of three categories: 'suitable' (✅ Suitable for Your Skin) when ingredients align well with skin needs, 'caution' (⚠️ Use With Caution) when some ingredients may not suit all conditions, or 'not_recommended' (❌ Not Recommended) when product contains ingredients likely to irritate or damage the skin, based on the combined evaluation of safety score, skin-type match, and concern relevance",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Extend the backend evaluateProductSuitability result to include a detailed explanation panel object containing: an array of highlighted ingredients that influenced the decision with their individual safety classifications, scientific reasoning text for warnings or approvals explaining why the product received its classification, and an array of suggested safer ingredient alternatives when the product is classified as 'caution' or 'not_recommended'",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "Add scientific reasoning explanations to product search results",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Update the backend evaluateProductSuitability function in backend/main.mo to include scientific reasoning in the explanation panel when evaluating products entered via the search/input field, providing detailed explanations about why specific ingredients are beneficial or problematic for the user's skin type and concerns",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-41",
+      "summary": "Add PDF export functionality to generate reports of project documentation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Install and configure a PDF generation library (html2pdf.js or jsPDF with html2canvas) in the frontend to enable client-side PDF generation from HTML content",
+      "reqIds": [
+        "REQ-74"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-43",
+      "summary": "Redesign the DBMS Documentation page with a professional academic report layout, typography, and styling suitable for formal project submission",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Upgrade the DBMSDocumentationPage with a refined academic report design including professional section headers, improved code syntax highlighting, refined diagram presentation, and polished typography suitable for formal documentation export.",
+      "reqIds": [
+        "REQ-88"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "SkinCare Analyzer",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
