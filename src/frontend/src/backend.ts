@@ -89,15 +89,6 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface IngredientInfo {
-    suitableSkinTypes: Array<SkinType>;
-    isAcneProneConcern: boolean;
-    isClogProneConcern: boolean;
-    safetyClassification: IngredientSafety;
-    name: string;
-    description: string;
-    isSensitiveConcern: boolean;
-}
 export interface HighlightedIngredient {
     name: string;
     reason: string;
@@ -122,17 +113,15 @@ export interface SkincareProduct {
     brand: string;
     keyIngredients: Array<string>;
 }
+export interface User {
+    age: bigint;
+    name: string;
+    email?: string;
+}
 export interface RoutineStep {
     order: bigint;
     productName: string;
     frequency: bigint;
-}
-export interface ProgressMetrics {
-    stableSkinType: bigint;
-    drynessTrend: string;
-    pigmentationTrend: string;
-    agingTrend: string;
-    acneTrend: string;
 }
 export interface ProductNote {
     productName: string;
@@ -151,12 +140,6 @@ export interface IngredientAnalysisResult {
     ingredientName: string;
     concernWarnings: boolean;
 }
-export interface SkinTypeData {
-    answers: Array<bigint>;
-    concerns: SkinConcerns;
-    timestamp: bigint;
-    detectedSkinType: SkinType;
-}
 export interface SkinConcerns {
     aging: ConcernLevel;
     acne: ConcernLevel;
@@ -168,8 +151,14 @@ export interface ProductCompatibilityScore {
     verdict: Variant_fair_good_poor_unsafe_excellent;
     score: bigint;
 }
-export interface UserProfile {
+export interface IngredientInfo {
+    suitableSkinTypes: Array<SkinType>;
+    isAcneProneConcern: boolean;
+    isClogProneConcern: boolean;
+    safetyClassification: IngredientSafety;
     name: string;
+    description: string;
+    isSensitiveConcern: boolean;
 }
 export enum ConcernLevel {
     low = "low",
@@ -226,43 +215,33 @@ export interface backendInterface {
     analyzeIngredients(ingredientNames: Array<string>, userSkinType: SkinType): Promise<Array<IngredientAnalysisResult>>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     calculateProductCompatibilityScore(results: Array<IngredientAnalysisResult>): Promise<ProductCompatibilityScore>;
-    clearStore(): Promise<void>;
     compareProducts(productNames: Array<string>, userSkinType: SkinType): Promise<{
         products: Array<SkincareProduct>;
         analysis: Array<IngredientAnalysisResult>;
     }>;
-    confirmSkinType(skinType: SkinType, concerns: SkinConcerns): Promise<void>;
-    deleteByTimeStamp(user: Principal, timestamp: bigint): Promise<void>;
     deleteRoutine(routineName: string): Promise<void>;
-    deleteUserData(user: Principal): Promise<void>;
     evaluateProductSuitability(productName: string, userSkinType: SkinType, arg2: SkinConcerns): Promise<SuitabilityResult>;
     getAllIngredients(): Promise<Array<IngredientInfo>>;
     getAllProductNames(): Promise<Array<string>>;
-    getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getFavorites(): Promise<Array<string>>;
     getIngredient(name: string): Promise<IngredientInfo | null>;
-    getLatestSkinType(): Promise<SkinType | null>;
     getMyRecordCount(): Promise<bigint>;
     getPersonalizedRecommendations(userSkinType: SkinType, concerns: SkinConcerns): Promise<Array<SkincareProduct>>;
     getProductNotes(): Promise<Array<ProductNote>>;
-    getProgressMetrics(): Promise<ProgressMetrics>;
     getRoutines(): Promise<Array<SkincareRoutine>>;
-    getSkinTypeDataByTimestamp(timestamp: bigint): Promise<SkinTypeData | null>;
-    getSkinTypeDetectionResults(): Promise<Array<SkinTypeData>>;
     getStoreCount(): Promise<bigint>;
-    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    getUserProfileIntro(): Promise<User>;
     isCallerAdmin(): Promise<boolean>;
     removeFavorite(productName: string): Promise<void>;
-    saveCallerUserProfile(profile: UserProfile): Promise<void>;
     saveProduct(product: SkincareProduct): Promise<void>;
     saveRoutine(routine: SkincareRoutine): Promise<void>;
-    saveSkinTypeData(skinTypeData: SkinTypeData): Promise<void>;
     searchProductByName(productName: string): Promise<SkincareProduct | null>;
     seedIngredients(): Promise<void>;
     setSkincareProducts(products: Array<SkincareProduct>): Promise<void>;
+    updateUserProfileIntro(name: string, age: bigint, email: string | null): Promise<User>;
 }
-import type { ConcernLevel as _ConcernLevel, ExplanatoryPanel as _ExplanatoryPanel, HighlightedIngredient as _HighlightedIngredient, IngredientAnalysisResult as _IngredientAnalysisResult, IngredientInfo as _IngredientInfo, IngredientSafety as _IngredientSafety, PriceRange as _PriceRange, ProductCategory as _ProductCategory, ProductCompatibilityScore as _ProductCompatibilityScore, ProductSuitability as _ProductSuitability, SkinConcerns as _SkinConcerns, SkinType as _SkinType, SkinTypeData as _SkinTypeData, SkincareProduct as _SkincareProduct, SuitabilityResult as _SuitabilityResult, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { ConcernLevel as _ConcernLevel, ExplanatoryPanel as _ExplanatoryPanel, HighlightedIngredient as _HighlightedIngredient, IngredientAnalysisResult as _IngredientAnalysisResult, IngredientInfo as _IngredientInfo, IngredientSafety as _IngredientSafety, PriceRange as _PriceRange, ProductCategory as _ProductCategory, ProductCompatibilityScore as _ProductCompatibilityScore, ProductSuitability as _ProductSuitability, SkinConcerns as _SkinConcerns, SkinType as _SkinType, SkincareProduct as _SkincareProduct, SuitabilityResult as _SuitabilityResult, User as _User, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -349,20 +328,6 @@ export class Backend implements backendInterface {
             return from_candid_ProductCompatibilityScore_n15(this._uploadFile, this._downloadFile, result);
         }
     }
-    async clearStore(): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.clearStore();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.clearStore();
-            return result;
-        }
-    }
     async compareProducts(arg0: Array<string>, arg1: SkinType): Promise<{
         products: Array<SkincareProduct>;
         analysis: Array<IngredientAnalysisResult>;
@@ -380,34 +345,6 @@ export class Backend implements backendInterface {
             return from_candid_record_n18(this._uploadFile, this._downloadFile, result);
         }
     }
-    async confirmSkinType(arg0: SkinType, arg1: SkinConcerns): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.confirmSkinType(to_candid_SkinType_n1(this._uploadFile, this._downloadFile, arg0), to_candid_SkinConcerns_n29(this._uploadFile, this._downloadFile, arg1));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.confirmSkinType(to_candid_SkinType_n1(this._uploadFile, this._downloadFile, arg0), to_candid_SkinConcerns_n29(this._uploadFile, this._downloadFile, arg1));
-            return result;
-        }
-    }
-    async deleteByTimeStamp(arg0: Principal, arg1: bigint): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.deleteByTimeStamp(arg0, arg1);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.deleteByTimeStamp(arg0, arg1);
-            return result;
-        }
-    }
     async deleteRoutine(arg0: string): Promise<void> {
         if (this.processError) {
             try {
@@ -419,20 +356,6 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.deleteRoutine(arg0);
-            return result;
-        }
-    }
-    async deleteUserData(arg0: Principal): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.deleteUserData(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.deleteUserData(arg0);
             return result;
         }
     }
@@ -478,32 +401,18 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getCallerUserProfile(): Promise<UserProfile | null> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getCallerUserProfile();
-                return from_candid_opt_n45(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getCallerUserProfile();
-            return from_candid_opt_n45(this._uploadFile, this._downloadFile, result);
-        }
-    }
     async getCallerUserRole(): Promise<UserRole> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n46(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n45(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n46(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n45(this._uploadFile, this._downloadFile, result);
         }
     }
     async getFavorites(): Promise<Array<string>> {
@@ -524,28 +433,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getIngredient(arg0);
-                return from_candid_opt_n48(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getIngredient(arg0);
-            return from_candid_opt_n48(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getLatestSkinType(): Promise<SkinType | null> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getLatestSkinType();
-                return from_candid_opt_n49(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getLatestSkinType();
-            return from_candid_opt_n49(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
         }
     }
     async getMyRecordCount(): Promise<bigint> {
@@ -590,20 +485,6 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getProgressMetrics(): Promise<ProgressMetrics> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getProgressMetrics();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getProgressMetrics();
-            return result;
-        }
-    }
     async getRoutines(): Promise<Array<SkincareRoutine>> {
         if (this.processError) {
             try {
@@ -616,34 +497,6 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getRoutines();
             return result;
-        }
-    }
-    async getSkinTypeDataByTimestamp(arg0: bigint): Promise<SkinTypeData | null> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getSkinTypeDataByTimestamp(arg0);
-                return from_candid_opt_n50(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getSkinTypeDataByTimestamp(arg0);
-            return from_candid_opt_n50(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getSkinTypeDetectionResults(): Promise<Array<SkinTypeData>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getSkinTypeDetectionResults();
-                return from_candid_vec_n57(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getSkinTypeDetectionResults();
-            return from_candid_vec_n57(this._uploadFile, this._downloadFile, result);
         }
     }
     async getStoreCount(): Promise<bigint> {
@@ -660,18 +513,18 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
+    async getUserProfileIntro(): Promise<User> {
         if (this.processError) {
             try {
-                const result = await this.actor.getUserProfile(arg0);
-                return from_candid_opt_n45(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.getUserProfileIntro();
+                return from_candid_User_n48(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getUserProfile(arg0);
-            return from_candid_opt_n45(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.getUserProfileIntro();
+            return from_candid_User_n48(this._uploadFile, this._downloadFile, result);
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -702,31 +555,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.saveCallerUserProfile(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.saveCallerUserProfile(arg0);
-            return result;
-        }
-    }
     async saveProduct(arg0: SkincareProduct): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveProduct(to_candid_SkincareProduct_n58(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.saveProduct(to_candid_SkincareProduct_n51(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveProduct(to_candid_SkincareProduct_n58(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.saveProduct(to_candid_SkincareProduct_n51(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
@@ -744,32 +583,18 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async saveSkinTypeData(arg0: SkinTypeData): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.saveSkinTypeData(to_candid_SkinTypeData_n65(this._uploadFile, this._downloadFile, arg0));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.saveSkinTypeData(to_candid_SkinTypeData_n65(this._uploadFile, this._downloadFile, arg0));
-            return result;
-        }
-    }
     async searchProductByName(arg0: string): Promise<SkincareProduct | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.searchProductByName(arg0);
-                return from_candid_opt_n67(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n58(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.searchProductByName(arg0);
-            return from_candid_opt_n67(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n58(this._uploadFile, this._downloadFile, result);
         }
     }
     async seedIngredients(): Promise<void> {
@@ -789,20 +614,31 @@ export class Backend implements backendInterface {
     async setSkincareProducts(arg0: Array<SkincareProduct>): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.setSkincareProducts(to_candid_vec_n68(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.setSkincareProducts(to_candid_vec_n59(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.setSkincareProducts(to_candid_vec_n68(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.setSkincareProducts(to_candid_vec_n59(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
-}
-function from_candid_ConcernLevel_n55(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ConcernLevel): ConcernLevel {
-    return from_candid_variant_n56(_uploadFile, _downloadFile, value);
+    async updateUserProfileIntro(arg0: string, arg1: bigint, arg2: string | null): Promise<User> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateUserProfileIntro(arg0, arg1, to_candid_opt_n60(this._uploadFile, this._downloadFile, arg2));
+                return from_candid_User_n48(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateUserProfileIntro(arg0, arg1, to_candid_opt_n60(this._uploadFile, this._downloadFile, arg2));
+            return from_candid_User_n48(this._uploadFile, this._downloadFile, result);
+        }
+    }
 }
 function from_candid_ExplanatoryPanel_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ExplanatoryPanel): ExplanatoryPanel {
     return from_candid_record_n36(_uploadFile, _downloadFile, value);
@@ -831,12 +667,6 @@ function from_candid_ProductCompatibilityScore_n15(_uploadFile: (file: ExternalB
 function from_candid_ProductSuitability_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ProductSuitability): ProductSuitability {
     return from_candid_variant_n41(_uploadFile, _downloadFile, value);
 }
-function from_candid_SkinConcerns_n53(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SkinConcerns): SkinConcerns {
-    return from_candid_record_n54(_uploadFile, _downloadFile, value);
-}
-function from_candid_SkinTypeData_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SkinTypeData): SkinTypeData {
-    return from_candid_record_n52(_uploadFile, _downloadFile, value);
-}
 function from_candid_SkinType_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SkinType): SkinType {
     return from_candid_variant_n24(_uploadFile, _downloadFile, value);
 }
@@ -846,22 +676,19 @@ function from_candid_SkincareProduct_n20(_uploadFile: (file: ExternalBlob) => Pr
 function from_candid_SuitabilityResult_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SuitabilityResult): SuitabilityResult {
     return from_candid_record_n34(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n46(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n47(_uploadFile, _downloadFile, value);
+function from_candid_UserRole_n45(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n46(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n45(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
-    return value.length === 0 ? null : value[0];
+function from_candid_User_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _User): User {
+    return from_candid_record_n49(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_IngredientInfo]): IngredientInfo | null {
+function from_candid_opt_n47(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_IngredientInfo]): IngredientInfo | null {
     return value.length === 0 ? null : from_candid_IngredientInfo_n43(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n49(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SkinType]): SkinType | null {
-    return value.length === 0 ? null : from_candid_SkinType_n23(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n50(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
+    return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n50(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SkinTypeData]): SkinTypeData | null {
-    return value.length === 0 ? null : from_candid_SkinTypeData_n51(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n67(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SkincareProduct]): SkincareProduct | null {
+function from_candid_opt_n58(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SkincareProduct]): SkincareProduct | null {
     return value.length === 0 ? null : from_candid_SkincareProduct_n20(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
@@ -997,6 +824,21 @@ function from_candid_record_n44(_uploadFile: (file: ExternalBlob) => Promise<Uin
         isSensitiveConcern: value.isSensitiveConcern
     };
 }
+function from_candid_record_n49(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    age: bigint;
+    name: string;
+    email: [] | [string];
+}): {
+    age: bigint;
+    name: string;
+    email?: string;
+} {
+    return {
+        age: value.age,
+        name: value.name,
+        email: record_opt_to_undefined(from_candid_opt_n50(_uploadFile, _downloadFile, value.email))
+    };
+}
 function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     isCompatible: boolean;
     safetyClassification: _IngredientSafety;
@@ -1016,45 +858,6 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
         explanation: value.explanation,
         ingredientName: value.ingredientName,
         concernWarnings: value.concernWarnings
-    };
-}
-function from_candid_record_n52(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    answers: Array<bigint>;
-    concerns: _SkinConcerns;
-    timestamp: bigint;
-    detectedSkinType: _SkinType;
-}): {
-    answers: Array<bigint>;
-    concerns: SkinConcerns;
-    timestamp: bigint;
-    detectedSkinType: SkinType;
-} {
-    return {
-        answers: value.answers,
-        concerns: from_candid_SkinConcerns_n53(_uploadFile, _downloadFile, value.concerns),
-        timestamp: value.timestamp,
-        detectedSkinType: from_candid_SkinType_n23(_uploadFile, _downloadFile, value.detectedSkinType)
-    };
-}
-function from_candid_record_n54(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    aging: _ConcernLevel;
-    acne: _ConcernLevel;
-    concerns: Array<string>;
-    pigmentation: _ConcernLevel;
-    dryness: _ConcernLevel;
-}): {
-    aging: ConcernLevel;
-    acne: ConcernLevel;
-    concerns: Array<string>;
-    pigmentation: ConcernLevel;
-    dryness: ConcernLevel;
-} {
-    return {
-        aging: from_candid_ConcernLevel_n55(_uploadFile, _downloadFile, value.aging),
-        acne: from_candid_ConcernLevel_n55(_uploadFile, _downloadFile, value.acne),
-        concerns: value.concerns,
-        pigmentation: from_candid_ConcernLevel_n55(_uploadFile, _downloadFile, value.pigmentation),
-        dryness: from_candid_ConcernLevel_n55(_uploadFile, _downloadFile, value.dryness)
     };
 }
 function from_candid_variant_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
@@ -1114,7 +917,7 @@ function from_candid_variant_n41(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): ProductSuitability {
     return "caution" in value ? ProductSuitability.caution : "suitable" in value ? ProductSuitability.suitable : "not_recommended" in value ? ProductSuitability.not_recommended : value;
 }
-function from_candid_variant_n47(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n46(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -1122,17 +925,6 @@ function from_candid_variant_n47(_uploadFile: (file: ExternalBlob) => Promise<Ui
     guest: null;
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
-}
-function from_candid_variant_n56(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    low: null;
-} | {
-    high: null;
-} | {
-    none: null;
-} | {
-    medium: null;
-}): ConcernLevel {
-    return "low" in value ? ConcernLevel.low : "high" in value ? ConcernLevel.high : "none" in value ? ConcernLevel.none : "medium" in value ? ConcernLevel.medium : value;
 }
 function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     safe: null;
@@ -1160,9 +952,6 @@ function from_candid_vec_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function from_candid_vec_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_IngredientInfo>): Array<IngredientInfo> {
     return value.map((x)=>from_candid_IngredientInfo_n43(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n57(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_SkinTypeData>): Array<SkinTypeData> {
-    return value.map((x)=>from_candid_SkinTypeData_n51(_uploadFile, _downloadFile, x));
-}
 function to_candid_ConcernLevel_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ConcernLevel): _ConcernLevel {
     return to_candid_variant_n32(_uploadFile, _downloadFile, value);
 }
@@ -1172,26 +961,26 @@ function to_candid_IngredientAnalysisResult_n11(_uploadFile: (file: ExternalBlob
 function to_candid_IngredientSafety_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: IngredientSafety): _IngredientSafety {
     return to_candid_variant_n14(_uploadFile, _downloadFile, value);
 }
-function to_candid_PriceRange_n61(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PriceRange): _PriceRange {
-    return to_candid_variant_n62(_uploadFile, _downloadFile, value);
+function to_candid_PriceRange_n54(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PriceRange): _PriceRange {
+    return to_candid_variant_n55(_uploadFile, _downloadFile, value);
 }
-function to_candid_ProductCategory_n63(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProductCategory): _ProductCategory {
-    return to_candid_variant_n64(_uploadFile, _downloadFile, value);
+function to_candid_ProductCategory_n56(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProductCategory): _ProductCategory {
+    return to_candid_variant_n57(_uploadFile, _downloadFile, value);
 }
 function to_candid_SkinConcerns_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SkinConcerns): _SkinConcerns {
     return to_candid_record_n30(_uploadFile, _downloadFile, value);
 }
-function to_candid_SkinTypeData_n65(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SkinTypeData): _SkinTypeData {
-    return to_candid_record_n66(_uploadFile, _downloadFile, value);
-}
 function to_candid_SkinType_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SkinType): _SkinType {
     return to_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
-function to_candid_SkincareProduct_n58(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SkincareProduct): _SkincareProduct {
-    return to_candid_record_n59(_uploadFile, _downloadFile, value);
+function to_candid_SkincareProduct_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SkincareProduct): _SkincareProduct {
+    return to_candid_record_n52(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n9(_uploadFile, _downloadFile, value);
+}
+function to_candid_opt_n60(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: string | null): [] | [string] {
+    return value === null ? candid_none() : candid_some(value);
 }
 function to_candid_record_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     isCompatible: boolean;
@@ -1235,7 +1024,7 @@ function to_candid_record_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         dryness: to_candid_ConcernLevel_n31(_uploadFile, _downloadFile, value.dryness)
     };
 }
-function to_candid_record_n59(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n52(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     suitableSkinTypes: Array<SkinType>;
     name: string;
     description: string;
@@ -1255,32 +1044,14 @@ function to_candid_record_n59(_uploadFile: (file: ExternalBlob) => Promise<Uint8
     keyIngredients: Array<string>;
 } {
     return {
-        suitableSkinTypes: to_candid_vec_n60(_uploadFile, _downloadFile, value.suitableSkinTypes),
+        suitableSkinTypes: to_candid_vec_n53(_uploadFile, _downloadFile, value.suitableSkinTypes),
         name: value.name,
         description: value.description,
         concerns: value.concerns,
-        priceRange: to_candid_PriceRange_n61(_uploadFile, _downloadFile, value.priceRange),
-        category: to_candid_ProductCategory_n63(_uploadFile, _downloadFile, value.category),
+        priceRange: to_candid_PriceRange_n54(_uploadFile, _downloadFile, value.priceRange),
+        category: to_candid_ProductCategory_n56(_uploadFile, _downloadFile, value.category),
         brand: value.brand,
         keyIngredients: value.keyIngredients
-    };
-}
-function to_candid_record_n66(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    answers: Array<bigint>;
-    concerns: SkinConcerns;
-    timestamp: bigint;
-    detectedSkinType: SkinType;
-}): {
-    answers: Array<bigint>;
-    concerns: _SkinConcerns;
-    timestamp: bigint;
-    detectedSkinType: _SkinType;
-} {
-    return {
-        answers: value.answers,
-        concerns: to_candid_SkinConcerns_n29(_uploadFile, _downloadFile, value.concerns),
-        timestamp: value.timestamp,
-        detectedSkinType: to_candid_SkinType_n1(_uploadFile, _downloadFile, value.detectedSkinType)
     };
 }
 function to_candid_variant_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: IngredientSafety): {
@@ -1344,7 +1115,7 @@ function to_candid_variant_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint
         medium: null
     } : value;
 }
-function to_candid_variant_n62(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PriceRange): {
+function to_candid_variant_n55(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: PriceRange): {
     low: null;
 } | {
     high: null;
@@ -1359,7 +1130,7 @@ function to_candid_variant_n62(_uploadFile: (file: ExternalBlob) => Promise<Uint
         medium: null
     } : value;
 }
-function to_candid_variant_n64(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProductCategory): {
+function to_candid_variant_n57(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProductCategory): {
     sunscreen: null;
 } | {
     cleanser: null;
@@ -1400,11 +1171,11 @@ function to_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8
 function to_candid_vec_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<IngredientAnalysisResult>): Array<_IngredientAnalysisResult> {
     return value.map((x)=>to_candid_IngredientAnalysisResult_n11(_uploadFile, _downloadFile, x));
 }
-function to_candid_vec_n60(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<SkinType>): Array<_SkinType> {
+function to_candid_vec_n53(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<SkinType>): Array<_SkinType> {
     return value.map((x)=>to_candid_SkinType_n1(_uploadFile, _downloadFile, x));
 }
-function to_candid_vec_n68(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<SkincareProduct>): Array<_SkincareProduct> {
-    return value.map((x)=>to_candid_SkincareProduct_n58(_uploadFile, _downloadFile, x));
+function to_candid_vec_n59(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<SkincareProduct>): Array<_SkincareProduct> {
+    return value.map((x)=>to_candid_SkincareProduct_n51(_uploadFile, _downloadFile, x));
 }
 export interface CreateActorOptions {
     agent?: Agent;

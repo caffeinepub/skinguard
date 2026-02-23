@@ -9,9 +9,10 @@ import Map "mo:core/Map";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import IngredientStore "ingredient-store";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
+
 actor {
   public type SkinType = {
     #oily;
@@ -74,8 +75,10 @@ actor {
     timestamp : Nat;
   };
 
-  public type UserProfile = {
+  public type User = {
     name : Text;
+    age : Nat;
+    email : ?Text;
   };
 
   public type IngredientSafety = {
@@ -156,211 +159,18 @@ actor {
   };
 
   let skinTypeStore = Map.empty<Principal, [SkinTypeData]>();
-  let userProfiles = Map.empty<Principal, UserProfile>();
   let favorites = Map.empty<Principal, List.List<Text>>();
   let routines = Map.empty<Principal, List.List<SkincareRoutine>>();
   let productNotes = Map.empty<Principal, List.List<ProductNote>>();
   let ingredientStore = IngredientStore.empty();
   let productStore = Map.empty<Text, SkincareProduct>();
   let productSuitabilityStore = Map.empty<Text, SuitabilityResult>();
+  let userStore = Map.empty<Principal, User>();
+
   var skincareProducts : [SkincareProduct] = [];
 
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
-
-  public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access profiles");
-    };
-    userProfiles.get(caller);
-  };
-
-  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
-    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile");
-    };
-    userProfiles.get(user);
-  };
-
-  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save profiles");
-    };
-    userProfiles.add(caller, profile);
-  };
-
-  public query ({ caller }) func getSkinTypeDetectionResults() : async [SkinTypeData] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access skin type data");
-    };
-
-    switch (skinTypeStore.get(caller)) {
-      case (?results) { results };
-      case null { [] };
-    };
-  };
-
-  public query ({ caller }) func getSkinTypeDataByTimestamp(timestamp : Nat) : async ?SkinTypeData {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access skin type data");
-    };
-
-    switch (skinTypeStore.get(caller)) {
-      case (?results) {
-        results.find(func(data : SkinTypeData) : Bool { data.timestamp == timestamp });
-      };
-      case null { null };
-    };
-  };
-
-  public shared ({ caller }) func saveSkinTypeData(skinTypeData : SkinTypeData) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save skin type data");
-    };
-
-    let currentResults = switch (skinTypeStore.get(caller)) {
-      case (?results) { results };
-      case null { [] };
-    };
-
-    let updatedResults = currentResults.concat([skinTypeData]);
-    skinTypeStore.add(caller, updatedResults);
-  };
-
-  public shared ({ caller }) func confirmSkinType(skinType : SkinType, concerns : SkinConcerns) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can confirm skin type");
-    };
-
-    let skinTypeData = {
-      answers = [];
-      detectedSkinType = skinType;
-      concerns;
-      timestamp = 0;
-    };
-
-    let currentResults = switch (skinTypeStore.get(caller)) {
-      case (?results) { results };
-      case null { [] };
-    };
-
-    let updatedResults = currentResults.concat([skinTypeData]);
-    skinTypeStore.add(caller, updatedResults);
-  };
-
-  public query ({ caller }) func getLatestSkinType() : async ?SkinType {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access skin type data");
-    };
-
-    switch (skinTypeStore.get(caller)) {
-      case (?results) {
-        if (results.isEmpty()) {
-          return null;
-        };
-
-        var latestIndex = 0;
-        var latestTimestamp = results[0].timestamp;
-
-        var i = 1;
-        while (i < results.size()) {
-          if (results[i].timestamp > latestTimestamp) {
-            latestIndex := i;
-            latestTimestamp := results[i].timestamp;
-          };
-          i += 1;
-        };
-        ?results[latestIndex].detectedSkinType;
-      };
-      case null { null };
-    };
-  };
-
-  public query ({ caller }) func getProgressMetrics() : async ProgressMetrics {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access progress metrics");
-    };
-
-    let userResults = switch (skinTypeStore.get(caller)) {
-      case (?results) { results };
-      case null { [] };
-    };
-
-    if (userResults.size() == 0) {
-      return {
-        acneTrend = "No data";
-        pigmentationTrend = "No data";
-        agingTrend = "No data";
-        drynessTrend = "No data";
-        stableSkinType = 0;
-      };
-    };
-
-    func getTrend(values : [Nat]) : Text {
-      if (values.size() < 2) { return "Stable" };
-      var isIncreasing = true;
-      for (i in Nat.range(1, values.size())) {
-        if (values[i] < values[i - 1]) { isIncreasing := false };
-      };
-      if (isIncreasing) { "Improvement" } else { "Decline" };
-    };
-
-    let acneLevels = userResults.map(func(res) { Nat.min(3, rawValueOfConcernLevel(res.concerns.acne)) });
-    let pigmentationLevels = userResults.map(func(res) { Nat.min(3, rawValueOfConcernLevel(res.concerns.pigmentation)) });
-    let agingLevels = userResults.map(func(res) { Nat.min(3, rawValueOfConcernLevel(res.concerns.aging)) });
-    let drynessLevels = userResults.map(func(res) { Nat.min(3, rawValueOfConcernLevel(res.concerns.dryness)) });
-
-    {
-      acneTrend = getTrend(acneLevels);
-      pigmentationTrend = getTrend(pigmentationLevels);
-      agingTrend = getTrend(agingLevels);
-      drynessTrend = getTrend(drynessLevels);
-      stableSkinType = 1;
-    };
-  };
-
-  func rawValueOfConcernLevel(level : ConcernLevel) : Nat {
-    switch (level) {
-      case (#none) { 0 };
-      case (#low) { 1 };
-      case (#medium) { 2 };
-      case (#high) { 3 };
-    };
-  };
-
-  public shared ({ caller }) func clearStore() : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admin can clear store");
-    };
-    skinTypeStore.clear();
-  };
-
-  public shared ({ caller }) func deleteByTimeStamp(user : Principal, timestamp : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admin can delete store entries");
-    };
-
-    switch (skinTypeStore.get(user)) {
-      case (?results) {
-        let filteredResults = results.filter(func(data : SkinTypeData) : Bool {
-          data.timestamp != timestamp
-        });
-        if (filteredResults.size() > 0) {
-          skinTypeStore.add(user, filteredResults);
-        } else {
-          skinTypeStore.remove(user);
-        };
-      };
-      case null { /* No data for user */ };
-    };
-  };
-
-  public shared ({ caller }) func deleteUserData(user : Principal) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admin can delete user data");
-    };
-    skinTypeStore.remove(user);
-  };
 
   public query ({ caller }) func getStoreCount() : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
@@ -785,5 +595,30 @@ actor {
     "This information is based on current scientific studies.\n";
     reasoning;
   };
-};
 
+  public shared ({ caller }) func updateUserProfileIntro(name : Text, age : Nat, email : ?Text) : async User {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only authenticated users can update their profile");
+    };
+
+    let userProfile = {
+      name;
+      age;
+      email;
+    };
+
+    userStore.add(caller, userProfile);
+    userProfile;
+  };
+
+  public query ({ caller }) func getUserProfileIntro() : async User {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only authenticated users can view their profile");
+    };
+
+    switch (userStore.get(caller)) {
+      case (?profile) { profile };
+      case (null) { Runtime.trap("User profile not found") };
+    };
+  };
+};

@@ -1,7 +1,7 @@
 import AuthGuard from '../components/AuthGuard';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { useCompareProducts } from '../hooks/useQueries';
+import { useCompareProducts, useGetLatestSkinType } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -21,15 +21,16 @@ function ComparisonContent() {
   const search = useSearch({ strict: false }) as any;
   const [productNames, setProductNames] = useState<string[]>([]);
   const compareProducts = useCompareProducts();
+  const { data: latestSkinType } = useGetLatestSkinType();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const products = params.getAll('product');
-    if (products.length >= 2 && products.length <= 3) {
+    if (products.length >= 2 && products.length <= 3 && latestSkinType) {
       setProductNames(products);
-      compareProducts.mutate(products);
+      compareProducts.mutate({ productNames: products, skinType: latestSkinType });
     }
-  }, []);
+  }, [latestSkinType]);
 
   if (productNames.length === 0) {
     return (

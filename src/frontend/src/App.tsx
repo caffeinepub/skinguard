@@ -1,6 +1,7 @@
-import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
+import { RouterProvider, createRouter, createRoute, createRootRoute, useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from './hooks/useInternetIdentity';
-import { useGetCallerUserProfile } from './hooks/useGetCallerUserProfile';
+import { useGetUserProfileIntro } from './hooks/useQueries';
+import { useEffect } from 'react';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 import QuestionnairePage from './pages/QuestionnairePage';
@@ -16,7 +17,7 @@ import ProductJournalPage from './pages/ProductJournalPage';
 import IngredientDictionaryPage from './pages/IngredientDictionaryPage';
 import ProductSuitabilityCheckerPage from './pages/ProductSuitabilityCheckerPage';
 import DBMSDocumentationPage from './pages/DBMSDocumentationPage';
-import ProfileSetupModal from './components/ProfileSetupModal';
+import ProfileIntroPage from './pages/ProfileIntroPage';
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -26,6 +27,12 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: LandingPage,
+});
+
+const profileIntroRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/profile-intro',
+  component: ProfileIntroPage,
 });
 
 const questionnaireRoute = createRoute({
@@ -108,6 +115,7 @@ const dbmsDocsRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  profileIntroRoute,
   questionnaireRoute,
   resultsRoute,
   ingredientAnalysisRoute,
@@ -131,17 +139,36 @@ declare module '@tanstack/react-router' {
   }
 }
 
-export default function App() {
+function ProfileRedirectHandler() {
+  const navigate = useNavigate();
   const { identity } = useInternetIdentity();
-  const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
-  
-  const isAuthenticated = !!identity;
-  const showProfileSetup = isAuthenticated && !profileLoading && isFetched && userProfile === null;
+  const { data: userProfileIntro, isLoading: introLoading, isFetched: introFetched } = useGetUserProfileIntro();
 
+  const isAuthenticated = !!identity;
+
+  useEffect(() => {
+    // Only redirect if authenticated and data is loaded
+    if (!isAuthenticated || introLoading || !introFetched) {
+      return;
+    }
+
+    // Check if user needs to complete profile intro
+    const currentPath = window.location.pathname;
+    
+    // If user doesn't have intro profile, redirect to profile-intro
+    if (userProfileIntro === null && currentPath !== '/profile-intro' && currentPath !== '/') {
+      navigate({ to: '/profile-intro' });
+    }
+  }, [isAuthenticated, userProfileIntro, introLoading, introFetched, navigate]);
+
+  return null;
+}
+
+export default function App() {
   return (
     <>
       <RouterProvider router={router} />
-      {showProfileSetup && <ProfileSetupModal />}
+      <ProfileRedirectHandler />
     </>
   );
 }

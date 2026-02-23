@@ -1,6 +1,53 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Frontend-only implementation plan for database seed data population",
-  "requirements": []
+  "title": "Export all project files with complete source code",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Create a downloadable archive containing all project source files with complete code contents including backend, frontend, configuration, and documentation files",
+      "acceptanceCriteria": [
+        "All backend files (.mo) are included with complete Motoko source code",
+        "All frontend files (.tsx, .ts, .css, .html) are included with complete TypeScript/React/CSS code",
+        "Configuration files (package.json, tailwind.config.js, dfx.json, etc.) are included",
+        "Files maintain their correct directory structure in the archive",
+        "Generated archive is downloadable as a single file (ZIP or text-based format)",
+        "File contents match the actual deployed codebase exactly"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/fileContentMap.ts",
+          "operation": "modify",
+          "description": "Replace placeholder file content generation with actual source code retrieval. Instead of generating dummy content, this file should export a comprehensive map where each file path points to its real source code content. Include all backend Motoko files (main.mo, authorization files), all frontend TypeScript/React components, hooks, pages, utilities, configuration files (package.json, tailwind.config.js, tsconfig.json, vite.config.ts, dfx.json), and documentation files. Ensure MIME type detection remains accurate for proper download handling. The content must match the actual deployed codebase exactly, preserving all syntax, formatting, and comments."
+        },
+        {
+          "path": "frontend/src/utils/fileTreeData.ts",
+          "operation": "modify",
+          "description": "Verify and update the file tree structure to include all project files in their correct directory hierarchy. Ensure the tree includes backend directory with all .mo files, frontend directory with all source files organized by type (components, pages, hooks, utils), configuration files at project root, and any missing files from the current structure. The tree should match the actual project structure exactly so users can navigate to any file."
+        },
+        {
+          "path": "frontend/src/utils/zipGenerator.ts",
+          "operation": "modify",
+          "description": "Update the text-based archive generator to use actual file contents from the updated fileContentMap instead of placeholder content. Ensure the generated archive includes proper file path markers, maintains directory structure with clear separators, and produces a downloadable text file that users can save with a .txt extension. The archive should be comprehensive enough that users can reconstruct the entire project from it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Ensure FileDownloadModal component correctly displays full file tree and provides download functionality for individual files with actual source code content",
+      "acceptanceCriteria": [
+        "FileDownloadModal shows complete file tree matching project structure",
+        "Individual file downloads contain actual source code from the project",
+        "Code syntax and formatting are preserved in downloaded files",
+        "File MIME types are correctly set for proper download handling"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/FileDownloadModal.tsx",
+          "operation": "modify",
+          "description": "Verify that the FileDownloadModal component correctly uses the updated fileContentMap and fileTreeData to display the complete project structure. Ensure the accordion navigation allows users to browse all directories and files. Confirm that individual file downloads trigger with the correct filename and MIME type, and that the 'Download All Files' button generates the complete archive using the updated zipGenerator. The modal should handle both individual file downloads and bulk archive generation seamlessly, always using actual source code content."
+        }
+      ]
+    }
+  ]
 }

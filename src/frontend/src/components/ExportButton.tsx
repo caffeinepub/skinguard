@@ -28,7 +28,7 @@ export default function ExportButton({ type }: ExportButtonProps) {
     
     try {
       const html = generateExportHTML({
-        userProfile: userProfile || { name: 'User' },
+        userProfile: userProfile || { name: 'User', age: BigInt(0), email: undefined },
         analysisHistory: analysisHistory || [],
         products: products || [],
         routines: routines || [],

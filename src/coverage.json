@@ -1,90 +1,45 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T10:44:55.523Z",
+  "generatedAt": "2026-02-23T16:33:15.385Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 9,
-    "implemented": 0,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-91",
-        "summary": "Expand the backend/ingredient-store.mo ingredient database to contain at least 50 valid ingredient records with complete information including name, safety classification (safe/conditional/risky/harmful), description of effects, suitable skin types array, and concern flags (acne-prone, sensitive, clog-prone)",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "id": "REQ-1",
+        "summary": "Create a downloadable archive containing all project source files with their complete code contents, including backend Motoko files (main.mo, ingredient-store.mo), frontend components, pages, hooks, utilities, configuration files, and documentation files",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/utils/fileContentMap.ts",
+          "frontend/src/utils/fileTreeData.ts",
+          "frontend/src/utils/zipGenerator.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/utils/fileContentMap.ts"
+        ]
       },
       {
-        "id": "REQ-92",
-        "summary": "Expand the product database in backend/main.mo to contain at least 50 valid product records with complete information including product name, brand, description, suitable skin types array, key ingredients array, product category, price range, and concerns addressed",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-93",
-        "summary": "Create seed data initialization in backend/main.mo that populates the users table with at least 50 valid test user records including unique principal IDs, names, email addresses (optional), timestamps, and associated skin type results covering diverse skin types and concern combinations",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-94",
-        "summary": "Generate seed data for the skin_type_results table in backend/main.mo with at least 50 valid analysis records linked to seed users, including complete data for detected skin type, concern levels (acne, pigmentation, aging, dryness), timestamp, and questionnaire responses",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-95",
-        "summary": "Create seed data for the favorites table in backend/main.mo with at least 50 valid favorite records distributed across seed users, linking users to products they have favorited with timestamps",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-96",
-        "summary": "Generate seed data for the routines table in backend/main.mo with at least 50 valid routine records distributed across seed users, including routine names (e.g., 'Morning Routine', 'Night Routine'), descriptions, and associated routine steps with product assignments, sequence orders, and frequency values",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-97",
-        "summary": "Create seed data for the product_notes table in backend/main.mo with at least 50 valid product note records distributed across seed users and products, including star ratings (1-5), notes text, usage experience descriptions, and timestamps",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-98",
-        "summary": "Generate seed data for the analysis_history table in backend/main.mo with at least 50 valid analysis history records showing users' skin analysis results over time, including timestamps spanning several months to demonstrate progress tracking functionality",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-99",
-        "summary": "Implement a backend admin function or initialization routine in backend/main.mo that populates all database tables with the complete seed data sets (users, products, ingredients, skin type results, favorites, routines, product notes, analysis history) to ensure minimum 50 valid records in each table for comprehensive data validation and testing",
-        "status": "unknown",
-        "plannedFiles": [],
+        "id": "REQ-2",
+        "summary": "Ensure the existing FileDownloadModal component correctly displays the full file tree and provides download functionality for individual files with their actual source code content, not placeholder content",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/components/FileDownloadModal.tsx"
+        ],
         "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
+    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/src/utils/fileContentMap.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

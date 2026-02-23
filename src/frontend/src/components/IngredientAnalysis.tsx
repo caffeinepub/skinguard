@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { useAnalyzeIngredients } from '../hooks/useQueries';
+import { useAnalyzeIngredients, useGetLatestSkinType } from '../hooks/useQueries';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
 import { Loader2, AlertCircle, CheckCircle, AlertTriangle, XCircle, Sparkles } from 'lucide-react';
-import { IngredientSafety, Variant_fair_good_poor_unsafe_excellent } from '../backend';
+import { IngredientSafety, Variant_fair_good_poor_unsafe_excellent, SkinType } from '../backend';
 
 export default function IngredientAnalysis() {
   const [ingredientInput, setIngredientInput] = useState('');
   const [validationError, setValidationError] = useState('');
   const analyzeIngredients = useAnalyzeIngredients();
+  const { data: latestSkinType } = useGetLatestSkinType();
 
   const parseIngredients = (input: string): string[] => {
     return input
@@ -41,8 +42,13 @@ export default function IngredientAnalysis() {
       return;
     }
 
+    if (!latestSkinType) {
+      setValidationError('Please complete the skin type questionnaire first');
+      return;
+    }
+
     const ingredients = parseIngredients(ingredientInput);
-    analyzeIngredients.mutate(ingredients);
+    analyzeIngredients.mutate({ ingredientNames: ingredients, skinType: latestSkinType });
   };
 
   const getSafetyBadgeVariant = (classification: IngredientSafety) => {

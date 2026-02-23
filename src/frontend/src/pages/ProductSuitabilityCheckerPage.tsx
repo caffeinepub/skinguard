@@ -9,7 +9,7 @@ import { Progress } from '../components/ui/progress';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Separator } from '../components/ui/separator';
 import AuthGuard from '../components/AuthGuard';
-import { useProductSuitabilityCheck, useProductAutocomplete } from '../hooks/useQueries';
+import { useProductSuitabilityCheck, useProductAutocomplete, useGetLatestSkinType, useGetSkinTypeDetectionResults } from '../hooks/useQueries';
 import { ProductSuitability, IngredientSafety } from '../backend';
 
 function ProductSuitabilityCheckerContent() {
@@ -23,6 +23,8 @@ function ProductSuitabilityCheckerContent() {
   
   const { mutate: checkSuitability, data: result, isPending, error } = useProductSuitabilityCheck();
   const { suggestions, isLoading: suggestionsLoading } = useProductAutocomplete(input);
+  const { data: latestSkinType } = useGetLatestSkinType();
+  const { data: allResults } = useGetSkinTypeDetectionResults();
 
   // Pre-fill product name from URL search params
   useEffect(() => {
@@ -66,9 +68,20 @@ function ProductSuitabilityCheckerContent() {
       return;
     }
 
+    if (!latestSkinType || !allResults || allResults.length === 0) {
+      setValidationError('Please complete the skin type questionnaire first');
+      return;
+    }
+
+    const latestResult = allResults[0];
+
     setValidationError('');
     setShowDropdown(false);
-    checkSuitability(trimmedInput);
+    checkSuitability({ 
+      productNameOrIngredients: trimmedInput, 
+      userSkinType: latestSkinType,
+      concerns: latestResult.concerns
+    });
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -171,144 +184,81 @@ function ProductSuitabilityCheckerContent() {
     }
   };
 
-  const formatScientificReasoning = (text: string) => {
-    const lines = text.split('\n');
-    return lines.map((line, index) => {
-      const trimmedLine = line.trim();
-      
-      if (trimmedLine.startsWith('Scientific Reasoning (INCI AI):')) {
-        return (
-          <div key={index} className="font-bold text-emerald-900 text-lg mb-3">
-            {trimmedLine.replace('Scientific Reasoning (INCI AI):', '').trim()}
-          </div>
-        );
-      }
-      
-      if (trimmedLine.startsWith('Product Ingredients:')) {
-        return (
-          <div key={index} className="mb-3">
-            <span className="font-semibold text-emerald-800">Product Ingredients:</span>
-            <span className="text-emerald-700">{trimmedLine.replace('Product Ingredients:', '')}</span>
-          </div>
-        );
-      }
-      
-      if (trimmedLine.match(/^(Oily|Dry|Combination|Sensitive|Normal) Skin:/)) {
-        return (
-          <div key={index} className="font-semibold text-emerald-800 mt-4 mb-2">
-            {trimmedLine}
-          </div>
-        );
-      }
-      
-      if (trimmedLine.startsWith('- Suitable Ingredients:') || trimmedLine.startsWith('- Cautionary Ingredients:')) {
-        return (
-          <div key={index} className="font-semibold text-emerald-800 mt-3 mb-1">
-            {trimmedLine}
-          </div>
-        );
-      }
-      
-      if (trimmedLine.startsWith('*')) {
-        return (
-          <div key={index} className="ml-6 text-emerald-700 mb-1">
-            {trimmedLine}
-          </div>
-        );
-      }
-      
-      if (trimmedLine) {
-        return (
-          <div key={index} className="text-emerald-700 mb-2">
-            {trimmedLine}
-          </div>
-        );
-      }
-      
-      return <div key={index} className="h-2" />;
-    });
-  };
+  const config = result ? getSuitabilityConfig(result.suitability) : null;
+  const compatibilityScore = calculateCompatibilityScore();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-emerald-900 mb-3">Product Suitability Checker</h1>
-          <p className="text-lg text-emerald-700">
-            Verify if a product is safe and compatible with your skin type
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="space-y-8">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-emerald-900">Product Suitability Checker</h1>
+          <p className="text-lg text-emerald-700 max-w-2xl mx-auto">
+            Check if a product is suitable for your skin type and concerns
           </p>
         </div>
 
-        <Card className="mb-8 border-emerald-100 shadow-lg">
+        <Card className="border-emerald-200">
           <CardHeader>
-            <CardTitle className="text-emerald-900">Enter Product Information</CardTitle>
+            <CardTitle className="text-emerald-900">Enter Product Name or Ingredients</CardTitle>
             <CardDescription>
-              Start typing a product name to see suggestions, or paste a comma-separated list of ingredients
+              Type a product name or paste the ingredient list
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative">
               <Textarea
                 ref={inputRef}
-                placeholder="Example: CeraVe Hydrating Cleanser&#10;&#10;Or ingredients: Water, Glycerin, Niacinamide, Ceramides, Hyaluronic Acid..."
+                placeholder="CeraVe Hydrating Facial Cleanser or Water, Glycerin, Ceramides..."
                 value={input}
                 onChange={(e) => {
                   setInput(e.target.value);
-                  setValidationError('');
+                  if (validationError) {
+                    setValidationError('');
+                  }
                 }}
                 onKeyDown={handleKeyDown}
-                className="min-h-[120px] resize-none border-emerald-200 focus:border-emerald-400"
+                rows={4}
+                className="resize-none border-emerald-200 focus:border-emerald-400"
               />
-              
-              {/* Autocomplete Dropdown */}
               {showDropdown && suggestions.length > 0 && (
                 <div
                   ref={dropdownRef}
                   className="absolute z-10 w-full mt-1 bg-white border border-emerald-200 rounded-lg shadow-lg max-h-60 overflow-y-auto"
                 >
                   {suggestions.map((suggestion, index) => (
-                    <button
+                    <div
                       key={index}
-                      onClick={() => handleSuggestionClick(suggestion)}
-                      className={`w-full text-left px-4 py-3 hover:bg-emerald-50 transition-colors border-b border-emerald-100 last:border-b-0 ${
-                        index === selectedIndex ? 'bg-emerald-100' : ''
+                      className={`px-4 py-2 cursor-pointer hover:bg-emerald-50 ${
+                        index === selectedIndex ? 'bg-emerald-50' : ''
                       }`}
+                      onClick={() => handleSuggestionClick(suggestion)}
                     >
-                      <span className="text-emerald-900 font-medium">{suggestion}</span>
-                    </button>
+                      {suggestion}
+                    </div>
                   ))}
                 </div>
               )}
             </div>
-            
             {validationError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{validationError}</AlertDescription>
               </Alert>
             )}
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error.message}</AlertDescription>
-              </Alert>
-            )}
-
             <Button
               onClick={handleAnalyze}
-              disabled={isPending}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+              disabled={!input.trim() || isPending}
+              className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
               size="lg"
             >
               {isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   Analyzing...
                 </>
               ) : (
                 <>
-                  <Search className="mr-2 h-5 w-5" />
+                  <Search className="w-5 h-5 mr-2" />
                   Check Suitability
                 </>
               )}
@@ -316,93 +266,85 @@ function ProductSuitabilityCheckerContent() {
           </CardContent>
         </Card>
 
-        {result && (
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {error?.message || 'Failed to check product suitability. Please try again.'}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {result && config && (
           <div className="space-y-6">
-            {/* Suitability Classification */}
-            <Card className={`border-2 ${getSuitabilityConfig(result.suitability).borderColor} ${getSuitabilityConfig(result.suitability).bgColor}`}>
+            <Card className={`border-2 ${config.borderColor} ${config.bgColor}`}>
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  {(() => {
-                    const Icon = getSuitabilityConfig(result.suitability).icon;
-                    return <Icon className={`w-8 h-8 ${getSuitabilityConfig(result.suitability).color}`} />;
-                  })()}
-                  <CardTitle className={`text-2xl ${getSuitabilityConfig(result.suitability).color}`}>
-                    {getSuitabilityConfig(result.suitability).label}
-                  </CardTitle>
+                  <config.icon className={`w-8 h-8 ${config.color}`} />
+                  <CardTitle className={`text-2xl ${config.color}`}>{config.label}</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm font-medium text-emerald-900">Compatibility Score</span>
-                      <span className="text-sm font-bold text-emerald-900">{calculateCompatibilityScore()}%</span>
-                    </div>
-                    <Progress value={calculateCompatibilityScore()} className="h-3" />
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">Compatibility Score</span>
+                    <span className={`text-2xl font-bold ${config.color}`}>{compatibilityScore}%</span>
                   </div>
+                  <Progress value={compatibilityScore} className="h-3" />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Detailed Explanation Panel */}
-            <Card className="border-emerald-100 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-emerald-900">Detailed Analysis</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Highlighted Ingredients */}
-                {result.explanation.highlightedIngredients.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-emerald-900 mb-3">Key Ingredients</h3>
-                    <div className="space-y-3">
-                      {result.explanation.highlightedIngredients.map((ingredient, index) => (
-                        <div key={index} className="flex items-start gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-100">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-emerald-900">{ingredient.name}</span>
-                              {getIngredientSafetyBadge(ingredient.classification)}
+            {result.explanation && (
+              <Card className="border-emerald-200">
+                <CardHeader>
+                  <CardTitle className="text-emerald-900">Detailed Analysis</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {result.explanation.highlightedIngredients.length > 0 && (
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-3">Key Ingredients</h3>
+                      <div className="space-y-3">
+                        {result.explanation.highlightedIngredients.map((ingredient, index) => (
+                          <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-medium text-gray-900">{ingredient.name}</span>
+                                {getIngredientSafetyBadge(ingredient.classification)}
+                              </div>
+                              <p className="text-sm text-gray-600">{ingredient.reason}</p>
                             </div>
-                            <p className="text-sm text-emerald-700">{ingredient.reason}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Scientific Reasoning */}
-                {result.explanation.scientificReasoning && (
-                  <>
-                    <Separator className="bg-emerald-200" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-emerald-900 mb-3">Scientific Reasoning (INCI AI)</h3>
-                      <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
-                        <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                          {formatScientificReasoning(result.explanation.scientificReasoning)}
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {/* Suggested Alternatives */}
-                {result.explanation.suggestedAlternatives.length > 0 && (
-                  <>
-                    <Separator className="bg-emerald-200" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-emerald-900 mb-3">Suggested Alternatives</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {result.explanation.suggestedAlternatives.map((alternative, index) => (
-                          <div key={index} className="p-3 bg-white rounded-lg border border-emerald-200 hover:border-emerald-400 transition-colors">
-                            <span className="text-emerald-900 font-medium">{alternative}</span>
                           </div>
                         ))}
                       </div>
                     </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+                  )}
+
+                  {result.explanation.scientificReasoning && (
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-3">Scientific Reasoning</h3>
+                      <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-line">
+                        {result.explanation.scientificReasoning}
+                      </div>
+                    </div>
+                  )}
+
+                  {result.explanation.suggestedAlternatives.length > 0 && (
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-3">Suggested Alternatives</h3>
+                      <ul className="space-y-2">
+                        {result.explanation.suggestedAlternatives.map((alt, index) => (
+                          <li key={index} className="flex items-start gap-2 text-gray-700">
+                            <span className="text-emerald-500 mt-1">•</span>
+                            <span>{alt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
       </div>

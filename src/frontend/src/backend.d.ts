@@ -7,15 +7,6 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export interface IngredientInfo {
-    suitableSkinTypes: Array<SkinType>;
-    isAcneProneConcern: boolean;
-    isClogProneConcern: boolean;
-    safetyClassification: IngredientSafety;
-    name: string;
-    description: string;
-    isSensitiveConcern: boolean;
-}
 export interface HighlightedIngredient {
     name: string;
     reason: string;
@@ -40,17 +31,15 @@ export interface SkincareProduct {
     brand: string;
     keyIngredients: Array<string>;
 }
+export interface User {
+    age: bigint;
+    name: string;
+    email?: string;
+}
 export interface RoutineStep {
     order: bigint;
     productName: string;
     frequency: bigint;
-}
-export interface ProgressMetrics {
-    stableSkinType: bigint;
-    drynessTrend: string;
-    pigmentationTrend: string;
-    agingTrend: string;
-    acneTrend: string;
 }
 export interface ProductNote {
     productName: string;
@@ -69,12 +58,6 @@ export interface IngredientAnalysisResult {
     ingredientName: string;
     concernWarnings: boolean;
 }
-export interface SkinTypeData {
-    answers: Array<bigint>;
-    concerns: SkinConcerns;
-    timestamp: bigint;
-    detectedSkinType: SkinType;
-}
 export interface SkinConcerns {
     aging: ConcernLevel;
     acne: ConcernLevel;
@@ -86,8 +69,14 @@ export interface ProductCompatibilityScore {
     verdict: Variant_fair_good_poor_unsafe_excellent;
     score: bigint;
 }
-export interface UserProfile {
+export interface IngredientInfo {
+    suitableSkinTypes: Array<SkinType>;
+    isAcneProneConcern: boolean;
+    isClogProneConcern: boolean;
+    safetyClassification: IngredientSafety;
     name: string;
+    description: string;
+    isSensitiveConcern: boolean;
 }
 export enum ConcernLevel {
     low = "low",
@@ -143,39 +132,29 @@ export interface backendInterface {
     analyzeIngredients(ingredientNames: Array<string>, userSkinType: SkinType): Promise<Array<IngredientAnalysisResult>>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     calculateProductCompatibilityScore(results: Array<IngredientAnalysisResult>): Promise<ProductCompatibilityScore>;
-    clearStore(): Promise<void>;
     compareProducts(productNames: Array<string>, userSkinType: SkinType): Promise<{
         products: Array<SkincareProduct>;
         analysis: Array<IngredientAnalysisResult>;
     }>;
-    confirmSkinType(skinType: SkinType, concerns: SkinConcerns): Promise<void>;
-    deleteByTimeStamp(user: Principal, timestamp: bigint): Promise<void>;
     deleteRoutine(routineName: string): Promise<void>;
-    deleteUserData(user: Principal): Promise<void>;
     evaluateProductSuitability(productName: string, userSkinType: SkinType, arg2: SkinConcerns): Promise<SuitabilityResult>;
     getAllIngredients(): Promise<Array<IngredientInfo>>;
     getAllProductNames(): Promise<Array<string>>;
-    getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getFavorites(): Promise<Array<string>>;
     getIngredient(name: string): Promise<IngredientInfo | null>;
-    getLatestSkinType(): Promise<SkinType | null>;
     getMyRecordCount(): Promise<bigint>;
     getPersonalizedRecommendations(userSkinType: SkinType, concerns: SkinConcerns): Promise<Array<SkincareProduct>>;
     getProductNotes(): Promise<Array<ProductNote>>;
-    getProgressMetrics(): Promise<ProgressMetrics>;
     getRoutines(): Promise<Array<SkincareRoutine>>;
-    getSkinTypeDataByTimestamp(timestamp: bigint): Promise<SkinTypeData | null>;
-    getSkinTypeDetectionResults(): Promise<Array<SkinTypeData>>;
     getStoreCount(): Promise<bigint>;
-    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    getUserProfileIntro(): Promise<User>;
     isCallerAdmin(): Promise<boolean>;
     removeFavorite(productName: string): Promise<void>;
-    saveCallerUserProfile(profile: UserProfile): Promise<void>;
     saveProduct(product: SkincareProduct): Promise<void>;
     saveRoutine(routine: SkincareRoutine): Promise<void>;
-    saveSkinTypeData(skinTypeData: SkinTypeData): Promise<void>;
     searchProductByName(productName: string): Promise<SkincareProduct | null>;
     seedIngredients(): Promise<void>;
     setSkincareProducts(products: Array<SkincareProduct>): Promise<void>;
+    updateUserProfileIntro(name: string, age: bigint, email: string | null): Promise<User>;
 }

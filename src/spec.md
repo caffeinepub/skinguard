@@ -1,17 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Populate all database tables with a minimum of 50 valid records each to enable comprehensive data validation and testing.
+**Goal:** Enable users to download all project source files with complete code contents in a downloadable archive format.
 
 **Planned changes:**
-- Expand ingredient database to 50+ records with complete safety classifications, descriptions, and skin type suitability
-- Add 50+ product records covering all major categories (cleansers, serums, moisturizers, sunscreens, treatments, toners, masks, exfoliants)
-- Generate 50+ test user records with diverse skin types and concern combinations
-- Create 50+ skin type analysis results linked to seed users
-- Populate favorites table with 50+ records distributed across users
-- Generate 50+ skincare routine records with multiple steps per routine
-- Add 50+ product note records with ratings and usage experiences
-- Create 50+ analysis history records spanning multiple months to show temporal progression
-- Implement admin initialization function to populate all tables with seed data while maintaining referential integrity
+- Create functionality to generate a downloadable archive containing all backend Motoko files (main.mo, ingredient-store.mo) with complete source code
+- Include all frontend files (components, pages, hooks, utilities) with complete TypeScript/React/CSS code in the archive
+- Add configuration files (package.json, tailwind.config.js, dfx.json) to the archive
+- Ensure FileDownloadModal displays the complete file tree and provides individual file downloads with actual source code content (not placeholders)
+- Maintain correct directory structure in the generated archive
+- Preserve code syntax and formatting in downloaded files
 
-**User-visible outcome:** The application will have a fully populated database with realistic test data, allowing comprehensive testing of all features including product recommendations, favorites, routines, notes, and progress tracking without requiring manual data entry.
+**User-visible outcome:** Users can download a complete archive of all project files with their actual source code, or download individual files through the FileDownloadModal with real code content instead of placeholders.

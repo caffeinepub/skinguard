@@ -1,4 +1,24 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-create-a-downloadable-archive-containing-all-project-source-files-with-their-complete-code-contents-including-backend-motoko-files-main-mo-ingredient-store-mo-frontend-components-pages-hooks-utilities-configuration-files-and-documentation-files",
+      "featureTitle": "Create a downloadable archive containing all project source files with their complete code contents, including backend Motoko files (main.mo, ingredient-store.mo), frontend components, pages, hooks, utilities, configuration files, and documentation files",
+      "files": [
+        "frontend/src/utils/fileContentMap.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

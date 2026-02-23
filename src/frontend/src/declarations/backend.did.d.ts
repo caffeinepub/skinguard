@@ -69,13 +69,6 @@ export interface ProductNote {
 export type ProductSuitability = { 'caution' : null } |
   { 'suitable' : null } |
   { 'not_recommended' : null };
-export interface ProgressMetrics {
-  'stableSkinType' : bigint,
-  'drynessTrend' : string,
-  'pigmentationTrend' : string,
-  'agingTrend' : string,
-  'acneTrend' : string,
-}
 export interface RoutineStep {
   'order' : bigint,
   'productName' : string,
@@ -93,12 +86,6 @@ export type SkinType = { 'dry' : null } |
   { 'normal' : null } |
   { 'oily' : null } |
   { 'sensitive' : null };
-export interface SkinTypeData {
-  'answers' : Array<bigint>,
-  'concerns' : SkinConcerns,
-  'timestamp' : bigint,
-  'detectedSkinType' : SkinType,
-}
 export interface SkincareProduct {
   'suitableSkinTypes' : Array<SkinType>,
   'name' : string,
@@ -117,7 +104,11 @@ export interface SuitabilityResult {
   'explanation' : ExplanatoryPanel,
   'suitability' : ProductSuitability,
 }
-export interface UserProfile { 'name' : string }
+export interface User {
+  'age' : bigint,
+  'name' : string,
+  'email' : [] | [string],
+}
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
@@ -134,7 +125,6 @@ export interface _SERVICE {
     [Array<IngredientAnalysisResult>],
     ProductCompatibilityScore
   >,
-  'clearStore' : ActorMethod<[], undefined>,
   'compareProducts' : ActorMethod<
     [Array<string>, SkinType],
     {
@@ -142,42 +132,33 @@ export interface _SERVICE {
       'analysis' : Array<IngredientAnalysisResult>,
     }
   >,
-  'confirmSkinType' : ActorMethod<[SkinType, SkinConcerns], undefined>,
-  'deleteByTimeStamp' : ActorMethod<[Principal, bigint], undefined>,
   'deleteRoutine' : ActorMethod<[string], undefined>,
-  'deleteUserData' : ActorMethod<[Principal], undefined>,
   'evaluateProductSuitability' : ActorMethod<
     [string, SkinType, SkinConcerns],
     SuitabilityResult
   >,
   'getAllIngredients' : ActorMethod<[], Array<IngredientInfo>>,
   'getAllProductNames' : ActorMethod<[], Array<string>>,
-  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getFavorites' : ActorMethod<[], Array<string>>,
   'getIngredient' : ActorMethod<[string], [] | [IngredientInfo]>,
-  'getLatestSkinType' : ActorMethod<[], [] | [SkinType]>,
   'getMyRecordCount' : ActorMethod<[], bigint>,
   'getPersonalizedRecommendations' : ActorMethod<
     [SkinType, SkinConcerns],
     Array<SkincareProduct>
   >,
   'getProductNotes' : ActorMethod<[], Array<ProductNote>>,
-  'getProgressMetrics' : ActorMethod<[], ProgressMetrics>,
   'getRoutines' : ActorMethod<[], Array<SkincareRoutine>>,
-  'getSkinTypeDataByTimestamp' : ActorMethod<[bigint], [] | [SkinTypeData]>,
-  'getSkinTypeDetectionResults' : ActorMethod<[], Array<SkinTypeData>>,
   'getStoreCount' : ActorMethod<[], bigint>,
-  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getUserProfileIntro' : ActorMethod<[], User>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'removeFavorite' : ActorMethod<[string], undefined>,
-  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'saveProduct' : ActorMethod<[SkincareProduct], undefined>,
   'saveRoutine' : ActorMethod<[SkincareRoutine], undefined>,
-  'saveSkinTypeData' : ActorMethod<[SkinTypeData], undefined>,
   'searchProductByName' : ActorMethod<[string], [] | [SkincareProduct]>,
   'seedIngredients' : ActorMethod<[], undefined>,
   'setSkincareProducts' : ActorMethod<[Array<SkincareProduct>], undefined>,
+  'updateUserProfileIntro' : ActorMethod<[string, bigint, [] | [string]], User>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

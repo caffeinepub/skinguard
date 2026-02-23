@@ -1,7 +1,21 @@
-import { SkinTypeData, ConcernLevel } from '../backend';
+import { ConcernLevel } from '../backend';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Calendar, Droplets, Zap, Clock, Sun } from 'lucide-react';
+
+// Temporary type definition until backend provides SkinTypeData
+type SkinTypeData = {
+  answers: bigint[];
+  detectedSkinType: string;
+  concerns: {
+    acne: ConcernLevel;
+    pigmentation: ConcernLevel;
+    aging: ConcernLevel;
+    dryness: ConcernLevel;
+    concerns: string[];
+  };
+  timestamp: bigint;
+};
 
 interface AnalysisHistoryProps {
   history: SkinTypeData[];

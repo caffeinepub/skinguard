@@ -112,14 +112,6 @@ export const IngredientInfo = IDL.Record({
   'description' : IDL.Text,
   'isSensitiveConcern' : IDL.Bool,
 });
-export const UserProfile = IDL.Record({ 'name' : IDL.Text });
-export const ProgressMetrics = IDL.Record({
-  'stableSkinType' : IDL.Nat,
-  'drynessTrend' : IDL.Text,
-  'pigmentationTrend' : IDL.Text,
-  'agingTrend' : IDL.Text,
-  'acneTrend' : IDL.Text,
-});
 export const RoutineStep = IDL.Record({
   'order' : IDL.Nat,
   'productName' : IDL.Text,
@@ -129,11 +121,10 @@ export const SkincareRoutine = IDL.Record({
   'name' : IDL.Text,
   'steps' : IDL.Vec(RoutineStep),
 });
-export const SkinTypeData = IDL.Record({
-  'answers' : IDL.Vec(IDL.Nat),
-  'concerns' : SkinConcerns,
-  'timestamp' : IDL.Nat,
-  'detectedSkinType' : SkinType,
+export const User = IDL.Record({
+  'age' : IDL.Nat,
+  'name' : IDL.Text,
+  'email' : IDL.Opt(IDL.Text),
 });
 
 export const idlService = IDL.Service({
@@ -151,7 +142,6 @@ export const idlService = IDL.Service({
       [ProductCompatibilityScore],
       ['query'],
     ),
-  'clearStore' : IDL.Func([], [], []),
   'compareProducts' : IDL.Func(
       [IDL.Vec(IDL.Text), SkinType],
       [
@@ -162,10 +152,7 @@ export const idlService = IDL.Service({
       ],
       [],
     ),
-  'confirmSkinType' : IDL.Func([SkinType, SkinConcerns], [], []),
-  'deleteByTimeStamp' : IDL.Func([IDL.Principal, IDL.Nat], [], []),
   'deleteRoutine' : IDL.Func([IDL.Text], [], []),
-  'deleteUserData' : IDL.Func([IDL.Principal], [], []),
   'evaluateProductSuitability' : IDL.Func(
       [IDL.Text, SkinType, SkinConcerns],
       [SuitabilityResult],
@@ -173,11 +160,9 @@ export const idlService = IDL.Service({
     ),
   'getAllIngredients' : IDL.Func([], [IDL.Vec(IngredientInfo)], ['query']),
   'getAllProductNames' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getFavorites' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
   'getIngredient' : IDL.Func([IDL.Text], [IDL.Opt(IngredientInfo)], ['query']),
-  'getLatestSkinType' : IDL.Func([], [IDL.Opt(SkinType)], ['query']),
   'getMyRecordCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getPersonalizedRecommendations' : IDL.Func(
       [SkinType, SkinConcerns],
@@ -185,30 +170,13 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getProductNotes' : IDL.Func([], [IDL.Vec(ProductNote)], ['query']),
-  'getProgressMetrics' : IDL.Func([], [ProgressMetrics], ['query']),
   'getRoutines' : IDL.Func([], [IDL.Vec(SkincareRoutine)], ['query']),
-  'getSkinTypeDataByTimestamp' : IDL.Func(
-      [IDL.Nat],
-      [IDL.Opt(SkinTypeData)],
-      ['query'],
-    ),
-  'getSkinTypeDetectionResults' : IDL.Func(
-      [],
-      [IDL.Vec(SkinTypeData)],
-      ['query'],
-    ),
   'getStoreCount' : IDL.Func([], [IDL.Nat], ['query']),
-  'getUserProfile' : IDL.Func(
-      [IDL.Principal],
-      [IDL.Opt(UserProfile)],
-      ['query'],
-    ),
+  'getUserProfileIntro' : IDL.Func([], [User], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'removeFavorite' : IDL.Func([IDL.Text], [], []),
-  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'saveProduct' : IDL.Func([SkincareProduct], [], []),
   'saveRoutine' : IDL.Func([SkincareRoutine], [], []),
-  'saveSkinTypeData' : IDL.Func([SkinTypeData], [], []),
   'searchProductByName' : IDL.Func(
       [IDL.Text],
       [IDL.Opt(SkincareProduct)],
@@ -216,6 +184,11 @@ export const idlService = IDL.Service({
     ),
   'seedIngredients' : IDL.Func([], [], []),
   'setSkincareProducts' : IDL.Func([IDL.Vec(SkincareProduct)], [], []),
+  'updateUserProfileIntro' : IDL.Func(
+      [IDL.Text, IDL.Nat, IDL.Opt(IDL.Text)],
+      [User],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
@@ -325,14 +298,6 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Text,
     'isSensitiveConcern' : IDL.Bool,
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text });
-  const ProgressMetrics = IDL.Record({
-    'stableSkinType' : IDL.Nat,
-    'drynessTrend' : IDL.Text,
-    'pigmentationTrend' : IDL.Text,
-    'agingTrend' : IDL.Text,
-    'acneTrend' : IDL.Text,
-  });
   const RoutineStep = IDL.Record({
     'order' : IDL.Nat,
     'productName' : IDL.Text,
@@ -342,11 +307,10 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'steps' : IDL.Vec(RoutineStep),
   });
-  const SkinTypeData = IDL.Record({
-    'answers' : IDL.Vec(IDL.Nat),
-    'concerns' : SkinConcerns,
-    'timestamp' : IDL.Nat,
-    'detectedSkinType' : SkinType,
+  const User = IDL.Record({
+    'age' : IDL.Nat,
+    'name' : IDL.Text,
+    'email' : IDL.Opt(IDL.Text),
   });
   
   return IDL.Service({
@@ -364,7 +328,6 @@ export const idlFactory = ({ IDL }) => {
         [ProductCompatibilityScore],
         ['query'],
       ),
-    'clearStore' : IDL.Func([], [], []),
     'compareProducts' : IDL.Func(
         [IDL.Vec(IDL.Text), SkinType],
         [
@@ -375,10 +338,7 @@ export const idlFactory = ({ IDL }) => {
         ],
         [],
       ),
-    'confirmSkinType' : IDL.Func([SkinType, SkinConcerns], [], []),
-    'deleteByTimeStamp' : IDL.Func([IDL.Principal, IDL.Nat], [], []),
     'deleteRoutine' : IDL.Func([IDL.Text], [], []),
-    'deleteUserData' : IDL.Func([IDL.Principal], [], []),
     'evaluateProductSuitability' : IDL.Func(
         [IDL.Text, SkinType, SkinConcerns],
         [SuitabilityResult],
@@ -386,7 +346,6 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getAllIngredients' : IDL.Func([], [IDL.Vec(IngredientInfo)], ['query']),
     'getAllProductNames' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getFavorites' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     'getIngredient' : IDL.Func(
@@ -394,7 +353,6 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(IngredientInfo)],
         ['query'],
       ),
-    'getLatestSkinType' : IDL.Func([], [IDL.Opt(SkinType)], ['query']),
     'getMyRecordCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getPersonalizedRecommendations' : IDL.Func(
         [SkinType, SkinConcerns],
@@ -402,30 +360,13 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getProductNotes' : IDL.Func([], [IDL.Vec(ProductNote)], ['query']),
-    'getProgressMetrics' : IDL.Func([], [ProgressMetrics], ['query']),
     'getRoutines' : IDL.Func([], [IDL.Vec(SkincareRoutine)], ['query']),
-    'getSkinTypeDataByTimestamp' : IDL.Func(
-        [IDL.Nat],
-        [IDL.Opt(SkinTypeData)],
-        ['query'],
-      ),
-    'getSkinTypeDetectionResults' : IDL.Func(
-        [],
-        [IDL.Vec(SkinTypeData)],
-        ['query'],
-      ),
     'getStoreCount' : IDL.Func([], [IDL.Nat], ['query']),
-    'getUserProfile' : IDL.Func(
-        [IDL.Principal],
-        [IDL.Opt(UserProfile)],
-        ['query'],
-      ),
+    'getUserProfileIntro' : IDL.Func([], [User], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'removeFavorite' : IDL.Func([IDL.Text], [], []),
-    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'saveProduct' : IDL.Func([SkincareProduct], [], []),
     'saveRoutine' : IDL.Func([SkincareRoutine], [], []),
-    'saveSkinTypeData' : IDL.Func([SkinTypeData], [], []),
     'searchProductByName' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(SkincareProduct)],
@@ -433,6 +374,11 @@ export const idlFactory = ({ IDL }) => {
       ),
     'seedIngredients' : IDL.Func([], [], []),
     'setSkincareProducts' : IDL.Func([IDL.Vec(SkincareProduct)], [], []),
+    'updateUserProfileIntro' : IDL.Func(
+        [IDL.Text, IDL.Nat, IDL.Opt(IDL.Text)],
+        [User],
+        [],
+      ),
   });
 };
 

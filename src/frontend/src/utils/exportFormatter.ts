@@ -1,8 +1,22 @@
-import { UserProfile, SkinTypeData, SkincareProduct, SkincareRoutine, ProductNote } from '../backend';
+import { User, SkincareProduct, SkincareRoutine, ProductNote, ConcernLevel } from '../backend';
 import { skinTypeDescriptions } from './skinTypeDescriptions';
 
+// Temporary type definitions until backend provides these types
+type SkinTypeData = {
+  answers: bigint[];
+  detectedSkinType: string;
+  concerns: {
+    acne: ConcernLevel;
+    pigmentation: ConcernLevel;
+    aging: ConcernLevel;
+    dryness: ConcernLevel;
+    concerns: string[];
+  };
+  timestamp: bigint;
+};
+
 interface ExportData {
-  userProfile: UserProfile;
+  userProfile: User;
   analysisHistory: SkinTypeData[];
   products: SkincareProduct[];
   routines: SkincareRoutine[];
@@ -64,19 +78,21 @@ export function generateExportHTML(data: ExportData): string {
   `;
 
   if (latestAnalysis) {
-    const skinTypeDesc = skinTypeDescriptions[latestAnalysis.detectedSkinType];
-    content += `
-      <h2>Current Skin Profile</h2>
-      <p><span class="badge badge-primary">${latestAnalysis.detectedSkinType.toUpperCase()} SKIN</span></p>
-      <h3>Characteristics</h3>
-      <p>${skinTypeDesc.characteristics}</p>
-      <h3>Care Tips</h3>
-      <ul>
-        ${skinTypeDesc.careTips.map((tip) => `<li>${tip}</li>`).join('')}
-      </ul>
-      <h3>Recommended Ingredients</h3>
-      <p>${skinTypeDesc.recommendedIngredients.join(', ')}</p>
-    `;
+    const skinTypeDesc = skinTypeDescriptions[latestAnalysis.detectedSkinType as keyof typeof skinTypeDescriptions];
+    if (skinTypeDesc) {
+      content += `
+        <h2>Current Skin Profile</h2>
+        <p><span class="badge badge-primary">${latestAnalysis.detectedSkinType.toUpperCase()} SKIN</span></p>
+        <h3>Characteristics</h3>
+        <p>${skinTypeDesc.characteristics}</p>
+        <h3>Care Tips</h3>
+        <ul>
+          ${skinTypeDesc.careTips.map((tip) => `<li>${tip}</li>`).join('')}
+        </ul>
+        <h3>Recommended Ingredients</h3>
+        <p>${skinTypeDesc.recommendedIngredients.join(', ')}</p>
+      `;
+    }
   }
 
   if (data.type === 'dashboard' && data.analysisHistory.length > 1) {

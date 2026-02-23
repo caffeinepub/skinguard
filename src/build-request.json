@@ -1,199 +1,60 @@
 {
   "kind": "build_request",
-  "title": "Populate all database tables with minimum 50 valid records each",
-  "priority": "high",
+  "title": "Export all project files with complete source code",
+  "projectName": "Skin Analysis Platform",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-91",
-      "text": "Expand the backend/ingredient-store.mo ingredient database to contain at least 50 valid ingredient records with complete information including name, safety classification (safe/conditional/risky/harmful), description of effects, suitable skin types array, and concern flags (acne-prone, sensitive, clog-prone)",
-      "target": "backend",
+      "id": "REQ-1",
+      "text": "Create a downloadable archive containing all project source files with their complete code contents, including backend Motoko files (main.mo, ingredient-store.mo), frontend components, pages, hooks, utilities, configuration files, and documentation files",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
         ],
         "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
+          "give me files individually with all codes"
         ]
       },
       "acceptanceCriteria": [
-        "Ingredient database contains at least 50 unique ingredient records",
-        "Each ingredient has all required fields populated: name, safety classification, description, suitable skin types, concern flags",
-        "Ingredients cover diverse categories: antioxidants, peptides, botanical extracts, humectants, emollients, preservatives, texturizers, UV filters, alcohols, silicones, etc.",
-        "All ingredient data is scientifically accurate and realistic"
+        "All backend files (.mo) are included with complete Motoko source code",
+        "All frontend files (.tsx, .ts, .css, .html) are included with complete TypeScript/React/CSS code",
+        "Configuration files (package.json, tailwind.config.js, dfx.json, etc.) are included",
+        "Files maintain their correct directory structure in the archive",
+        "Generated archive is downloadable as a single file (ZIP or text-based format)",
+        "File contents match the actual deployed codebase exactly"
       ]
     },
     {
-      "id": "REQ-92",
-      "text": "Expand the product database in backend/main.mo to contain at least 50 valid product records with complete information including product name, brand, description, suitable skin types array, key ingredients array, product category, price range, and concerns addressed",
-      "target": "backend",
+      "id": "REQ-2",
+      "text": "Ensure the existing FileDownloadModal component correctly displays the full file tree and provides download functionality for individual files with their actual source code content, not placeholder content",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
         ],
         "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
+          "give me files individually with all codes"
         ]
       },
       "acceptanceCriteria": [
-        "Product database contains at least 50 unique product records",
-        "Each product has all required fields populated: name, brand, description, suitable skin types, key ingredients, category, price range, concerns",
-        "Products cover all major categories: cleansers, serums, moisturizers, sunscreens, treatments, toners, masks, exfoliants",
-        "Products represent diverse skin type suitability (oily, dry, combination, sensitive, normal)",
-        "Each product lists realistic ingredient combinations and addresses specific skin concerns"
-      ]
-    },
-    {
-      "id": "REQ-93",
-      "text": "Create seed data initialization in backend/main.mo that populates the users table with at least 50 valid test user records including unique principal IDs, names, email addresses (optional), timestamps, and associated skin type results covering diverse skin types and concern combinations",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "User seed data contains at least 50 unique user records",
-        "Each user has realistic data: unique principal ID, name, timestamp",
-        "Users have varied skin type results (oily, dry, combination, sensitive, normal)",
-        "Users have diverse skin concern profiles (acne, pigmentation, aging, dryness combinations)",
-        "Seed data can be initialized on canister deployment or via admin function"
-      ]
-    },
-    {
-      "id": "REQ-94",
-      "text": "Generate seed data for the skin_type_results table in backend/main.mo with at least 50 valid analysis records linked to seed users, including complete data for detected skin type, concern levels (acne, pigmentation, aging, dryness), timestamp, and questionnaire responses",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Skin type results seed data contains at least 50 records",
-        "Each result is linked to a valid user from the users seed data",
-        "Results include complete concern level data with realistic severity values",
-        "Timestamps show realistic date distributions over time",
-        "Questionnaire response data is complete and valid for each result"
-      ]
-    },
-    {
-      "id": "REQ-95",
-      "text": "Create seed data for the favorites table in backend/main.mo with at least 50 valid favorite records distributed across seed users, linking users to products they have favorited with timestamps",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Favorites seed data contains at least 50 records",
-        "Each favorite record links a valid user to a valid product",
-        "Users have varied numbers of favorites (some with many, some with few)",
-        "Timestamps show realistic date distributions",
-        "No duplicate user-product combinations exist"
-      ]
-    },
-    {
-      "id": "REQ-96",
-      "text": "Generate seed data for the routines table in backend/main.mo with at least 50 valid routine records distributed across seed users, including routine names (e.g., 'Morning Routine', 'Night Routine'), descriptions, and associated routine steps with product assignments, sequence orders, and frequency values",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Routines seed data contains at least 50 routine records",
-        "Each routine is linked to a valid user and includes multiple routine steps",
-        "Routine steps reference valid products in correct sequence order",
-        "Routines have realistic names and frequencies (daily, twice daily, weekly)",
-        "Steps are ordered logically (cleanser before serum, moisturizer after serum, etc.)"
-      ]
-    },
-    {
-      "id": "REQ-97",
-      "text": "Create seed data for the product_notes table in backend/main.mo with at least 50 valid product note records distributed across seed users and products, including star ratings (1-5), notes text, usage experience descriptions, and timestamps",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Product notes seed data contains at least 50 records",
-        "Each note is linked to a valid user and valid product",
-        "Star ratings range from 1 to 5 with realistic distribution",
-        "Notes text and usage experiences are descriptive and varied",
-        "Timestamps show realistic date distributions"
-      ]
-    },
-    {
-      "id": "REQ-98",
-      "text": "Generate seed data for the analysis_history table in backend/main.mo with at least 50 valid analysis history records showing users' skin analysis results over time, including timestamps spanning several months to demonstrate progress tracking functionality",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Analysis history seed data contains at least 50 records",
-        "Records are distributed across users with some users having multiple analyses",
-        "Timestamps span multiple months showing temporal progression",
-        "Concern levels vary over time to demonstrate improvement or changes",
-        "Each history record contains complete skin type and concern data"
-      ]
-    },
-    {
-      "id": "REQ-99",
-      "text": "Implement a backend admin function or initialization routine in backend/main.mo that populates all database tables with the complete seed data sets (users, products, ingredients, skin type results, favorites, routines, product notes, analysis history) to ensure minimum 50 valid records in each table for comprehensive data validation and testing",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "each table must contain a minimum of 50 valid records for data validation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin initialization function successfully populates all tables with seed data",
-        "Function can be called during canister deployment or manually by admin",
-        "All referential integrity constraints are maintained (foreign key relationships)",
-        "Function includes validation to prevent duplicate initialization",
-        "Seed data initialization completes without errors and all tables contain at least 50 records"
+        "FileDownloadModal shows complete file tree matching project structure",
+        "Individual file downloads contain actual source code from the project",
+        "Code syntax and formatting are preserved in downloaded files",
+        "File MIME types are correctly set for proper download handling"
       ]
     }
   ],
   "constraints": [
-    "Maintain referential integrity across all seed data (users must exist before linking to their results, products must exist before favorites, etc.)",
-    "Respect the single-actor architecture in backend/main.mo for all seed data logic",
-    "Ensure seed data is realistic and scientifically accurate for skincare ingredients and products",
-    "Do not modify existing user data or production data when initializing seed records"
+    "Do not modify the backend architecture or Motoko actor structure",
+    "Preserve the existing FileDownloadModal component structure and UI",
+    "Maintain all existing file paths and directory organization"
   ],
   "nonGoals": [
-    "Implementing a database migration system for existing user data",
-    "Creating a UI for managing seed data",
-    "Adding real-time data synchronization features",
-    "Implementing external API integrations for product data"
+    "Changing the visual design or styling of the download interface",
+    "Adding version control or Git integration",
+    "Creating automated deployment scripts",
+    "Modifying any application functionality beyond file export"
   ],
   "imageRequirements": {
     "required": [],

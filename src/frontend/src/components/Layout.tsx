@@ -1,17 +1,26 @@
 import { Outlet, useNavigate } from '@tanstack/react-router';
-import { Heart, FlaskConical, LayoutDashboard, BookOpen, Star, Calendar, BookMarked, Search, FileText } from 'lucide-react';
+import { Heart, FlaskConical, LayoutDashboard, BookOpen, Star, Calendar, BookMarked, Search, FileText, Download, Github } from 'lucide-react';
 import { Button } from './ui/button';
 import LoginButton from './LoginButton';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useExportData } from '../hooks/useExportData';
+import { useState } from 'react';
+import FileDownloadModal from './FileDownloadModal';
 
 export default function Layout() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
+  const { exportData, isExporting } = useExportData();
+  const [showFileDownload, setShowFileDownload] = useState(false);
   
   const appIdentifier = typeof window !== 'undefined' 
     ? encodeURIComponent(window.location.hostname) 
     : 'skincare-analyzer';
+
+  const handleExport = async () => {
+    await exportData();
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50/50 via-white to-teal-50/50">
@@ -89,6 +98,25 @@ export default function Layout() {
                   <FileText className="w-4 h-4 mr-2" />
                   Documentation
                 </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleExport}
+                  disabled={isExporting}
+                  className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 font-medium transition-all duration-200"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  {isExporting ? 'Exporting...' : 'Export Data'}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowFileDownload(true)}
+                  className="text-purple-700 hover:text-purple-800 hover:bg-purple-50 font-medium transition-all duration-200"
+                >
+                  <Github className="w-4 h-4 mr-2" />
+                  Download for GitHub
+                </Button>
               </>
             )}
             <div className="ml-2">
@@ -118,6 +146,8 @@ export default function Layout() {
           </p>
         </div>
       </footer>
+
+      <FileDownloadModal open={showFileDownload} onOpenChange={setShowFileDownload} />
     </div>
   );
 }
