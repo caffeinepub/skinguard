@@ -1,0 +1,48 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-26T05:03:01.109Z",
+  "summary": "The diff implements a frontend-side ingredient database (ingredientDatabase.ts) with 70+ ingredients including harmful, caution, and beneficial classifications, updates IngredientAnalysis and ProductSuitabilityCheckerPage components with color-coded badges and compatibility scoring, and updates IngredientCard and IngredientDetailModal for correct safety display. However, the backend ingredient store (ingredient-store.mo) changes are not visible in the diff, raising questions about whether REQ-1 and REQ-2 backend requirements are fully met.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Expand the backend ingredient database (ingredient-store.mo / main.mo) with at least 60 common skincare ingredients with accurate safety classifications, each queryable via existing backend API.",
+      "reason": "The diff shows a new frontend utility file (ingredientDatabase.ts) with 70+ ingredients, but no changes to ingredient-store.mo are visible. The backend/main.mo diff is truncated and does not show ingredient data being added to the Motoko backend store. It is unclear whether the backend database was actually expanded.",
+      "evidence": [
+        "frontend/src/utils/ingredientDatabase.ts",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "Fix the ingredient safety classification logic in the backend so that known harmful/irritating ingredients are correctly classified as harmful/irritant rather than suitable.",
+      "reason": "No changes to ingredient-store.mo are shown in the diff. The backend safety classification logic fix is not evidenced in the provided diff — only frontend-side classification via ingredientDatabase.ts is visible.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Frontend-local ingredient database (ingredientDatabase.ts) used as the primary source for ingredient classification, with client-side compatibility score computation via computeCompatibilityScore and getVerdictFromScore utilities.",
+      "reason": "The build request specifies that ingredient data and scoring logic should be in the backend (ingredient-store.mo / main.mo), and that backend API signatures should be preserved. Moving the classification logic to the frontend as a local database was not requested and may bypass the backend entirely.",
+      "evidence": [
+        "frontend/src/utils/ingredientDatabase.ts",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/ProductSuitabilityCheckerPage.tsx",
+        "frontend/src/components/IngredientAnalysis.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.62,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend/src/components/IngredientAnalysis.tsx",
+    "frontend/src/components/IngredientCard.tsx",
+    "frontend/src/components/IngredientDetailModal.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/ProductSuitabilityCheckerPage.tsx",
+    "frontend/src/utils/ingredientDatabase.ts",
+    "project_state.json"
+  ]
+}

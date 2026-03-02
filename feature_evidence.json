@@ -1,0 +1,46 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-a-compatibility-rate-score-to-the-ingredient-analysis-result-when-a-user-submits-a-list-of-ingredients-compute-and-display-an-overall-compatibility-score-0-100-based-on-the-ratio-and-severity-of-harmful-vs-beneficial-ingredients-detected-display-this-score-prominently-in-the-ingredientanalysis-component-alongside-a-label-e-g-compatibility-rate-72-moderate",
+      "featureTitle": "Add a compatibility rate score to the ingredient analysis result. When a user submits a list of ingredients, compute and display an overall compatibility score (0–100%) based on the ratio and severity of harmful vs. beneficial ingredients detected. Display this score prominently in the IngredientAnalysis component alongside a label (e.g., 'Compatibility Rate: 72% — Moderate').",
+      "files": [
+        "frontend/src/components/IngredientAnalysis.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-productsuitabilitycheckerpage-and-ingredientanalysis-frontend-components-to-correctly-display-per-ingredient-safety-verdicts-good-for-skin-caution-bad-for-skin-avoid-using-color-coded-badges-that-reflect-the-updated-backend-classifications-ensure-the-ui-no-longer-shows-false-suitable-results-for-known-harmful-ingredients",
+      "featureTitle": "Update the ProductSuitabilityCheckerPage and IngredientAnalysis frontend components to correctly display per-ingredient safety verdicts ('Good for Skin', 'Caution', 'Bad for Skin / Avoid') using color-coded badges that reflect the updated backend classifications. Ensure the UI no longer shows false 'Suitable' results for known harmful ingredients.",
+      "files": [
+        "frontend/src/components/IngredientAnalysis.tsx",
+        "frontend/src/components/IngredientCard.tsx",
+        "frontend/src/components/IngredientDetailModal.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

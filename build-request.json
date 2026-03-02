@@ -1,0 +1,100 @@
+{
+  "kind": "build_request",
+  "title": "Fix ingredient safety ratings and expand ingredient database",
+  "projectName": "Skin Analysis Platform",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Fix the ingredient safety classification logic so that known harmful or irritating ingredients (e.g., alcohol/ethanol, sodium lauryl sulfate, sodium laureth sulfate, fragrance, parabens, formaldehyde, etc.) are correctly classified as 'Bad for skin', 'Irritant', or 'Avoid' rather than 'Suitable'. Each ingredient must have an accurate skin-suitability verdict based on dermatological consensus.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "if i give alcohol it will give suitable for my skin and also if i give sodium if will then also give result as good for skin"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Entering 'alcohol' or 'ethanol' returns a classification of harmful/irritant, NOT suitable for skin.",
+        "Entering 'sodium lauryl sulfate' or 'sodium laureth sulfate' returns a harmful/irritant classification.",
+        "Entering known beneficial ingredients (e.g., hyaluronic acid, niacinamide) still returns a positive/suitable classification.",
+        "No harmful ingredient is misclassified as good or suitable for skin."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Expand the backend ingredient database (ingredient-store.mo / main.mo) with a comprehensive list of at least 60 common skincare ingredients, each with accurate safety classifications covering: known irritants/harmful (alcohol denat, ethanol, sodium lauryl sulfate, sodium laureth sulfate, fragrance/parfum, methylparaben, propylparaben, formaldehyde, toluene, oxybenzone, triclosan, phthalates, mineral oil, petrolatum, coal tar, hydroquinone, synthetic dyes), caution ingredients (salicylic acid, retinol, benzoyl peroxide, alpha hydroxy acids, glycolic acid, lactic acid, citric acid, isopropyl alcohol), and beneficial/safe ingredients (hyaluronic acid, niacinamide, ceramides, glycerin, vitamin C/ascorbic acid, vitamin E/tocopherol, aloe vera, green tea extract, centella asiatica, squalane, jojoba oil, rosehip oil, zinc oxide, titanium dioxide, allantoin, panthenol/vitamin B5, ferulic acid, azelaic acid, peptides, collagen, elastin, shea butter, argan oil, tea tree oil, kojic acid, resveratrol, bakuchiol, sea buckthorn, licorice root extract, chamomile extract, oat extract/colloidal oatmeal, sodium PCA, trehalose, beta-glucan, marine collagen, coenzyme Q10/ubiquinone).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "please add more ingredients and list wheter its good for skin and update that"
+        ]
+      },
+      "acceptanceCriteria": [
+        "At least 60 ingredients are present in the ingredient store with distinct entries.",
+        "Each ingredient has a name, safety classification (beneficial / caution / harmful / irritant), a description, suitable skin types, and concern tags.",
+        "All ingredient entries are queryable via the existing backend API."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add a compatibility rate score to the ingredient analysis result. When a user submits a list of ingredients, compute and display an overall compatibility score (0–100%) based on the ratio and severity of harmful vs. beneficial ingredients detected. Display this score prominently in the IngredientAnalysis component alongside a label (e.g., 'Compatibility Rate: 72% — Moderate').",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "give compactibilityb RATE"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A numeric compatibility rate (0–100%) is computed and displayed after ingredient analysis.",
+        "The score reflects ingredient safety: more harmful ingredients lower the score, more beneficial ones raise it.",
+        "The score is labeled clearly (e.g., 'Compatibility Rate: 85% — Good') with a qualitative label.",
+        "Score updates live when the ingredient list changes and analysis is re-run."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update the ProductSuitabilityCheckerPage and IngredientAnalysis frontend components to correctly display per-ingredient safety verdicts ('Good for Skin', 'Caution', 'Bad for Skin / Avoid') using color-coded badges that reflect the updated backend classifications. Ensure the UI no longer shows false 'Suitable' results for known harmful ingredients.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "when i check product it will show same result as before",
+          "list wheter its good for skin and update that"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Harmful ingredients display a red 'Bad for Skin' or 'Avoid' badge.",
+        "Caution ingredients display a yellow 'Caution — Use Carefully' badge.",
+        "Beneficial ingredients display a green 'Good for Skin' badge.",
+        "No harmful ingredient such as alcohol or sodium lauryl sulfate displays a green/positive badge.",
+        "The ingredient detail view (IngredientDetailModal) shows the correct classification for all updated ingredients."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not change the existing questionnaire, skin type scoring, or user profile flows.",
+    "Preserve all existing backend query and mutation API signatures — only update ingredient data and scoring logic.",
+    "Frontend immutable paths (hooks, main.tsx, ui components) must not be modified."
+  ],
+  "nonGoals": [
+    "Adding new app pages or navigation routes.",
+    "Changing the skin type quiz or results display unrelated to ingredients.",
+    "Integrating any external ingredient API or third-party database.",
+    "Adding user accounts or personalized ingredient history."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

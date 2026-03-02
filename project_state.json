@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "A skincare product ingredient checker app. Users can input ingredients and the app evaluates whether they are good or bad for skin, along with a compatibility rate. The ingredient database needs to be expanded with more ingredients and accurate skin-suitability ratings.",
+  "architectural_notes": [
+    "Ingredient evaluation logic must distinguish harmful/irritating ingredients (e.g., alcohol, sodium) as bad for skin rather than defaulting to 'suitable'"
+  ],
+  "known_issues": [
+    "Ingredient checker returns incorrect results — harmful ingredients like alcohol and sodium are incorrectly rated as 'suitable for skin'"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-add-a-compatibility-rate-score-to-the-ingredient-analysis-result-when-a-user-submits-a-list-of-ingredients-compute-and-display-an-overall-compatibility-score-0-100-based-on-the-ratio-and-severity-of-harmful-vs-beneficial-ingredients-detected-display-this-score-prominently-in-the-ingredientanalysis-component-alongside-a-label-e-g-compatibility-rate-72-moderate",
+      "title": "Add a compatibility rate score to the ingredient analysis result. When a user submits a list of ingredients, compute and display an overall compatibility score (0–100%) based on the ratio and severity of harmful vs. beneficial ingredients detected. Display this score prominently in the IngredientAnalysis component alongside a label (e.g., 'Compatibility Rate: 72% — Moderate').",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-productsuitabilitycheckerpage-and-ingredientanalysis-frontend-components-to-correctly-display-per-ingredient-safety-verdicts-good-for-skin-caution-bad-for-skin-avoid-using-color-coded-badges-that-reflect-the-updated-backend-classifications-ensure-the-ui-no-longer-shows-false-suitable-results-for-known-harmful-ingredients",
+      "title": "Update the ProductSuitabilityCheckerPage and IngredientAnalysis frontend components to correctly display per-ingredient safety verdicts ('Good for Skin', 'Caution', 'Bad for Skin / Avoid') using color-coded badges that reflect the updated backend classifications. Ensure the UI no longer shows false 'Suitable' results for known harmful ingredients.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Expand ingredient database with more ingredients and accurate good/bad-for-skin classifications and compatibility ratings",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Fix the ingredient safety classification logic so that known harmful or irritating ingredients (e.g., alcohol/ethanol, sodium lauryl sulfate, sodium laureth sulfate, fragrance, parabens, formaldehyde, etc.) are correctly classified as 'Bad for skin', 'Irritant', or 'Avoid' rather than 'Suitable'. Each ingredient must have an accurate skin-suitability verdict based on dermatological consensus.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Expand the backend ingredient database (ingredient-store.mo / main.mo) with a comprehensive list of at least 60 common skincare ingredients, each with accurate safety classifications covering: known irritants/harmful (alcohol denat, ethanol, sodium lauryl sulfate, sodium laureth sulfate, fragrance/parfum, methylparaben, propylparaben, formaldehyde, toluene, oxybenzone, triclosan, phthalates, mineral oil, petrolatum, coal tar, hydroquinone, synthetic dyes), caution ingredients (salicylic acid, retinol, benzoyl peroxide, alpha hydroxy acids, glycolic acid, lactic acid, citric acid, isopropyl alcohol), and beneficial/safe ingredients (hyaluronic acid, niacinamide, ceramides, glycerin, vitamin C/ascorbic acid, vitamin E/tocopherol, aloe vera, green tea extract, centella asiatica, squalane, jojoba oil, rosehip oil, zinc oxide, titanium dioxide, allantoin, panthenol/vitamin B5, ferulic acid, azelaic acid, peptides, collagen, elastin, shea butter, argan oil, tea tree oil, kojic acid, resveratrol, bakuchiol, sea buckthorn, licorice root extract, chamomile extract, oat extract/colloidal oatmeal, sodium PCA, trehalose, beta-glucan, marine collagen, coenzyme Q10/ubiquinone).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Skincare Ingredient Checker",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

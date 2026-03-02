@@ -1,0 +1,67 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Fix ingredient safety ratings and expand ingredient database - Frontend Updates",
+  "requirements": [
+    {
+      "id": "REQ-3",
+      "summary": "Add compatibility rate score to ingredient analysis result",
+      "acceptanceCriteria": [
+        "A numeric compatibility rate (0–100%) is computed and displayed after ingredient analysis.",
+        "The score reflects ingredient safety: more harmful ingredients lower the score, more beneficial ones raise it.",
+        "The score is labeled clearly (e.g., 'Compatibility Rate: 85% — Good') with a qualitative label.",
+        "Score updates live when the ingredient list changes and analysis is re-run."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/IngredientAnalysis.tsx",
+          "operation": "modify",
+          "description": "Add compatibility rate display section that shows the score returned by calculateProductCompatibilityScore backend capability. Display the score as a percentage with a qualitative label (Excellent/Good/Fair/Poor/Unsafe) based on the verdict. Include a visual progress bar or circular indicator showing the compatibility percentage. Position this prominently above or beside the per-ingredient analysis results. Update the component to call calculateProductCompatibilityScore with the analysis results after ingredients are analyzed, using the useCalculateProductCompatibilityScore mutation hook."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useCalculateProductCompatibilityScore mutation hook that accepts an array of IngredientAnalysisResult and calls the backend calculateProductCompatibilityScore capability. Return the ProductCompatibilityScore containing score (0-100) and verdict enum. This hook enables the IngredientAnalysis component to compute and display the overall compatibility rate."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Update frontend components to correctly display per-ingredient safety verdicts",
+      "acceptanceCriteria": [
+        "Harmful ingredients display a red 'Bad for Skin' or 'Avoid' badge.",
+        "Caution ingredients display a yellow 'Caution — Use Carefully' badge.",
+        "Beneficial ingredients display a green 'Good for Skin' badge.",
+        "No harmful ingredient such as alcohol or sodium lauryl sulfate displays a green/positive badge.",
+        "The ingredient detail view (IngredientDetailModal) shows the correct classification for all updated ingredients."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/IngredientAnalysis.tsx",
+          "operation": "modify",
+          "description": "Update the safety classification badge rendering logic to correctly map IngredientSafety enum values to display labels and colors. Map 'harmful' to red badge with 'Bad for Skin' or 'Avoid' label, 'risky' or 'conditional' to yellow badge with 'Caution — Use Carefully' label, and 'safe' to green badge with 'Good for Skin' label. Ensure harmful ingredients like alcohol, sodium lauryl sulfate, and parabens display red badges after backend classification fixes. Update badge icons to match severity (warning icon for harmful, caution icon for risky, checkmark for safe)."
+        },
+        {
+          "path": "frontend/src/components/ProductSuitabilityCheckerPage.tsx",
+          "operation": "modify",
+          "description": "Update the ingredient suitability display section to use the corrected safety classification mapping. Ensure that when products are checked, harmful ingredients display red 'Bad for Skin' badges, caution ingredients display yellow 'Caution' badges, and beneficial ingredients display green 'Good for Skin' badges. Remove any hardcoded 'Suitable' labels that may incorrectly appear for harmful ingredients. Verify concern warnings are displayed for ingredients flagged with concernWarnings: true."
+        },
+        {
+          "path": "frontend/src/components/IngredientCard.tsx",
+          "operation": "modify",
+          "description": "Update the safety classification badge to correctly display colors and labels based on the IngredientSafety enum. Map 'harmful' to red with 'Harmful/Avoid', 'risky' or 'conditional' to yellow with 'Caution', and 'safe' to green with 'Safe'. Ensure the card accurately reflects the updated backend classifications for all ingredients."
+        },
+        {
+          "path": "frontend/src/components/IngredientDetailModal.tsx",
+          "operation": "modify",
+          "description": "Update the detailed ingredient view to display the correct safety classification badge using the same color/label mapping as IngredientCard and IngredientAnalysis. Ensure the description, suitable skin types, and concern warnings (acne-prone, sensitive, clog-prone) are displayed accurately. Verify that harmful ingredients show red safety badges and appropriate warnings in the modal."
+        },
+        {
+          "path": "frontend/src/components/ComparisonTable.tsx",
+          "operation": "modify",
+          "description": "Update the ingredient compatibility summary table to use the corrected safety classification icons and colors. Ensure harmful ingredients display red warning icons, caution ingredients display yellow caution icons, and safe ingredients display green checkmarks. Update any compatibility verdicts or tooltips to reflect the accurate backend classifications."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-26T05:03:01.112Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Fix the ingredient safety classification logic so that known harmful or irritating ingredients (e.g., alcohol/ethanol, sodium lauryl sulfate, sodium laureth sulfate, fragrance, parabens, formaldehyde, etc.) are correctly classified as 'Bad for skin', 'Irritant', or 'Avoid' rather than 'Suitable'. Each ingredient must have an accurate skin-suitability verdict based on dermatological consensus.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Expand the backend ingredient database (ingredient-store.mo / main.mo) with a comprehensive list of at least 60 common skincare ingredients, each with accurate safety classifications covering: known irritants/harmful (alcohol denat, ethanol, sodium lauryl sulfate, sodium laureth sulfate, fragrance/parfum, methylparaben, propylparaben, formaldehyde, toluene, oxybenzone, triclosan, phthalates, mineral oil, petrolatum, coal tar, hydroquinone, synthetic dyes), caution ingredients (salicylic acid, retinol, benzoyl peroxide, alpha hydroxy acids, glycolic acid, lactic acid, citric acid, isopropyl alcohol), and beneficial/safe ingredients (hyaluronic acid, niacinamide, ceramides, glycerin, vitamin C/ascorbic acid, vitamin E/tocopherol, aloe vera, green tea extract, centella asiatica, squalane, jojoba oil, rosehip oil, zinc oxide, titanium dioxide, allantoin, panthenol/vitamin B5, ferulic acid, azelaic acid, peptides, collagen, elastin, shea butter, argan oil, tea tree oil, kojic acid, resveratrol, bakuchiol, sea buckthorn, licorice root extract, chamomile extract, oat extract/colloidal oatmeal, sodium PCA, trehalose, beta-glucan, marine collagen, coenzyme Q10/ubiquinone).",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Add a compatibility rate score to the ingredient analysis result. When a user submits a list of ingredients, compute and display an overall compatibility score (0–100%) based on the ratio and severity of harmful vs. beneficial ingredients detected. Display this score prominently in the IngredientAnalysis component alongside a label (e.g., 'Compatibility Rate: 72% — Moderate').",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/IngredientAnalysis.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/IngredientAnalysis.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Update the ProductSuitabilityCheckerPage and IngredientAnalysis frontend components to correctly display per-ingredient safety verdicts ('Good for Skin', 'Caution', 'Bad for Skin / Avoid') using color-coded badges that reflect the updated backend classifications. Ensure the UI no longer shows false 'Suitable' results for known harmful ingredients.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/IngredientAnalysis.tsx",
+          "frontend/src/components/ProductSuitabilityCheckerPage.tsx",
+          "frontend/src/components/IngredientCard.tsx",
+          "frontend/src/components/IngredientDetailModal.tsx",
+          "frontend/src/components/ComparisonTable.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/IngredientAnalysis.tsx",
+          "frontend/src/components/IngredientCard.tsx",
+          "frontend/src/components/IngredientDetailModal.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/IngredientAnalysis.tsx",
+    "frontend/src/components/IngredientCard.tsx",
+    "frontend/src/components/IngredientDetailModal.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/ProductSuitabilityCheckerPage.tsx",
+    "frontend/src/utils/ingredientDatabase.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
